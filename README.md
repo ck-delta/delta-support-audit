@@ -2,12 +2,12 @@
 
 Production system that audits Delta Exchange's Freshdesk support center against `guides.delta.exchange` and `docs.delta.exchange` (sources of truth) for factual contradictions and missing coverage. Runs daily on Vercel Cron, writes the full graded report to Notion, fires P0 issues to Slack.
 
-**Status:** M0–M2 complete. M3–M5 in progress.
+**Status:** M0–M3 complete. M4–M5 in progress.
 
 - M0 — discovery
 - M1 — crawl + content-hash (765 hashes in Upstash Redis)
 - M2 — embed + retrieve (613 SoT chunks in Upstash Vector, BGE-large-en-v1.5)
-- M3 — compare + grade (LLM audits, planned next)
+- M3 — compare + grade (Sonnet 4.6 via OpenRouter; compare/conflict/coverage detectors; ~$0.02/article)
 - M4 — output + deploy (Slack + Notion + Vercel cron)
 - M5 — first sweep + tune
 
@@ -67,8 +67,12 @@ pnpm crawl                                    # all sources, dry run
 pnpm crawl --source=guides                    # one source
 pnpm crawl --source=docs --limit=10           # cap article count
 pnpm crawl --write                            # persist hashes to Redis (M1)
-pnpm tsx src/scripts/embed-sot.ts             # embed SoT chunks → Upstash Vector (M2)
+pnpm tsx src/scripts/embed-sot.ts             # embed corpus → Upstash Vector (M2; now includes support_freshdesk)
 pnpm tsx src/scripts/embed-sot.ts --sample-query="how is liquidation price calculated"
+pnpm tsx src/scripts/audit-one.ts <article-id>            # M3: audit one article
+pnpm tsx src/scripts/audit-batch.ts --limit=20            # M3: audit a batch (dry-run)
+pnpm tsx src/scripts/audit-batch.ts --limit=20 --write    # M3: persist + dedup against last run
+pnpm tsx src/scripts/audit-batch.ts --coverage            # M3: also run coverage gap detector
 pnpm test                                     # vitest
 pnpm typecheck                                # tsc --noEmit
 pnpm lint                                     # next lint
@@ -97,6 +101,22 @@ Free tier: 10K commands/day. A full sweep does ~460 hash reads + writes. Upgrade
 ### Hash mismatches on every run (every article shows changed:true)
 
 Indicates the normalizer is producing non-deterministic output. Likely cause: time-varying content (timestamps in HTML, randomized ad slots) leaking through. Add the offending selector to `stripSelectors` in `normalize.ts`.
+
+### Audit shows new issues every run for the same article
+
+Sonnet phrases issue summaries slightly differently across calls, so the dedup ID `sha256(sotUrl + canonicalSummary)` doesn't always match. This produces a `new` count that should be `still-open` and a `resolved` count that should be 0. Mitigations:
+
+1. Set `temperature: 0.0` (already default — but Sonnet still varies).
+2. Tune `compare.md` to enforce more constrained summary phrasing (e.g. "use this exact format: 'X says Y, Z says W'").
+3. Switch dedup to a coarser key like `sha256(sotUrl + supportUrl + severity)` — fewer false positives but loses precision when one article has multiple issues at the same severity.
+
+To be addressed in M5 prompt-tuning. Daily noise is mostly fine; this only matters for the still-open / resolved counts in the Notion summary.
+
+### Audit cost is higher than expected
+
+Default settings: top-K=5 per source, 2 sources, ~2000 chars per chunk → ~10K input tokens per article × 313 articles = ~3M input tokens per full sweep. At $3/MTok input + $15/MTok output, ~$10–12 per full sweep. Daily incremental runs only audit changed articles (M4 wires this), so post-first-sweep daily cost should be $0.30–0.60.
+
+To reduce cost during prompt-tuning: use `--limit=N` on audit-batch.
 
 ## Layout
 

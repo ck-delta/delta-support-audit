@@ -1,19 +1,19 @@
 import { config as loadEnv } from 'dotenv';
-import type { Article, Source } from '@/lib/types.js';
+import { type Article, type Source, SOURCES } from '@/lib/types.js';
 import { sha256 } from '@/lib/store/hash.js';
 import { kv } from '@/lib/store/kv.js';
 import { vec, upsertChunks, deleteChunks, retrieveTopK } from '@/lib/store/vector.js';
 import { chunkArticle } from '@/lib/embed/chunker.js';
 import { crawl as crawlGuides } from '@/lib/crawl/guides.js';
 import { crawl as crawlDocs } from '@/lib/crawl/docs.js';
+import { crawl as crawlSupportFreshdesk } from '@/lib/crawl/support_freshdesk.js';
 
 loadEnv({ path: '.env.local' });
 
-type SotSource = Exclude<Source, 'support_freshdesk'>;
-const SOT_SOURCES: SotSource[] = ['guides', 'docs'];
+const ALL_SOURCES: Source[] = [...SOURCES];
 
 interface Args {
-  source: SotSource | 'all';
+  source: Source | 'all';
   force: boolean;
   dryRun: boolean;
   sampleQuery?: string;
@@ -27,9 +27,9 @@ function parseArgs(argv: string[]): Args {
     if (a === '--force') args.force = true;
     else if (a === '--dry-run') args.dryRun = true;
     else if (a.startsWith('--source=')) {
-      const s = a.slice('--source='.length) as SotSource | 'all';
-      if (s !== 'all' && !SOT_SOURCES.includes(s as SotSource)) {
-        throw new Error(`--source must be one of: all, ${SOT_SOURCES.join(', ')}`);
+      const s = a.slice('--source='.length) as Source | 'all';
+      if (s !== 'all' && !ALL_SOURCES.includes(s as Source)) {
+        throw new Error(`--source must be one of: all, ${ALL_SOURCES.join(', ')}`);
       }
       args.source = s;
     } else if (a.startsWith('--sample-query=')) {
@@ -53,7 +53,8 @@ function printHelp(): void {
     [
       'Usage: pnpm tsx src/scripts/embed-sot.ts [opts]',
       '',
-      '  --source=<all|guides|docs>     Which source to embed (default: all)',
+      '  --source=<all|guides|docs|support_freshdesk>',
+      '                                 Which source to embed (default: all)',
       '  --force                        Re-embed even if hash matches',
       '  --dry-run                      Print plan, no upserts',
       '  --limit=N                      Cap articles per source (debugging)',
@@ -63,14 +64,15 @@ function printHelp(): void {
   );
 }
 
-async function* iterateSource(source: SotSource): AsyncGenerator<Article> {
+async function* iterateSource(source: Source): AsyncGenerator<Article> {
   if (source === 'guides') yield* crawlGuides();
   else if (source === 'docs') yield* crawlDocs();
+  else if (source === 'support_freshdesk') yield* crawlSupportFreshdesk();
 }
 
 async function main(): Promise<void> {
   const args = parseArgs(process.argv);
-  const sources: SotSource[] = args.source === 'all' ? SOT_SOURCES : [args.source];
+  const sources: Source[] = args.source === 'all' ? ALL_SOURCES : [args.source];
 
   const stats = { total: 0, upserted: 0, skipped: 0, articlesSeen: 0 };
   const redis = kv();

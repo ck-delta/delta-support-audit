@@ -23,7 +23,7 @@ export function resetVecForTests(): void {
 }
 
 export interface RetrieveOptions {
-  sourceFilter?: Exclude<Source, 'support_freshdesk'>;
+  sourceFilter?: Source;
 }
 
 export async function upsertChunks(

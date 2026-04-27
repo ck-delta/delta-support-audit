@@ -73,3 +73,37 @@ export interface RetrievedChunk {
   data: string;
   metadata: ChunkMetadata;
 }
+
+export interface ConflictIssue {
+  id: string;
+  severity: Severity;
+  guidesQuote: string;
+  guidesUrl: string;
+  docsQuote: string;
+  docsUrl: string;
+  summary: string;
+  confidence: number;
+  status: 'new' | 'still-open' | 'resolved';
+  firstSeenAt: string;
+  lastSeenAt: string;
+}
+
+export interface CoverageIssue {
+  id: string;
+  severity: Severity;
+  sotSource: 'guides' | 'docs';
+  sotUrl: string;
+  sotText: string;
+  closestSupportUrl?: string;
+  similarity: number;
+  missingAspects: string[];
+  suggestedSupportTopic: string;
+  suggestedOwner: SuggestedOwner;
+  summary: string;
+  confidence: number;
+  status: 'new' | 'still-open' | 'resolved';
+  firstSeenAt: string;
+  lastSeenAt: string;
+}
+
+export type DedupStatus = 'new' | 'still-open' | 'resolved';

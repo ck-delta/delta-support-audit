@@ -45,6 +45,15 @@ pnpm crawl --write                             # persist hashes to Redis
 pnpm crawl --source=guides --limit=5           # debugging
 ```
 
+## M3 audit pipeline (compare + conflict + coverage)
+
+- Single LLM call per support article, multi-task: returns `issues[]` (support↔SoT) + `conflicts[]` (guides↔docs).
+- Coverage runs as a separate sweep (only with `--coverage` flag); cost ~$2 per 600 SoT chunks.
+- Per-source retrieval: top-5 from guides + top-5 from docs (sourceFilter on Upstash Vector).
+- India hard-skip in compare.md: SoT chunks referencing non-India regimes (FCA, MiCA, US accredited, Delta Global) are not flagged.
+- Confidence floors enforced post-LLM: < 0.6 (P0/P1), < 0.7 (P2) → drop.
+- Dedup key: `sha256(sotUrl + canonicalSummary)`. Known M5 tuning task: Sonnet phrases summaries slightly differently across runs; coarser dedup may be needed.
+
 ## Conventions
 
 - All LLM prompts live in `src/prompts/*.md` — edit those, not inline strings.
