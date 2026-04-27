@@ -1,11 +1,11 @@
 import { z } from 'zod';
-import { sha256 } from '@/lib/store/hash.js';
+import { sha256 } from '@/lib/store/hash';
 import type {
   Issue,
   ConflictIssue,
   Severity,
   SuggestedOwner,
-} from '@/lib/types.js';
+} from '@/lib/types';
 
 const SeveritySchema = z.enum(['P0', 'P1', 'P2']);
 const OwnerSchema = z.enum(['Support', 'Docs', 'Engineering', 'Product']);

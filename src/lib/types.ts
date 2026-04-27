@@ -107,3 +107,31 @@ export interface CoverageIssue {
 }
 
 export type DedupStatus = 'new' | 'still-open' | 'resolved';
+
+export interface RunMetadata {
+  startedAt: string;
+  completedAt: string;
+  model: string;
+  articlesChecked: number;
+  articlesChanged: number;
+  articlesAudited: number;
+  totalIssues: number;
+  newIssues: number;
+  stillOpenIssues: number;
+  resolvedIssues: number;
+  totalConflicts: number;
+  totalCoverageGaps: number;
+  promptTokens: number;
+  completionTokens: number;
+  costEstimateUsd: number;
+  truncated: boolean;
+  durationMs: number;
+  errors: number;
+}
+
+export interface AuditReport {
+  metadata: RunMetadata;
+  issuesBySeverity: { P0: Issue[]; P1: Issue[]; P2: Issue[] };
+  conflicts: ConflictIssue[];
+  coverageGaps: CoverageIssue[];
+}

@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import type { Redis } from '@upstash/redis';
-import type { Source, HashRecord } from '@/lib/types.js';
+import type { Source, HashRecord } from '@/lib/types';
 
 export function sha256(text: string): string {
   return createHash('sha256').update(text, 'utf8').digest('hex');

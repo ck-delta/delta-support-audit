@@ -1,10 +1,10 @@
 import { config as loadEnv } from 'dotenv';
-import { SOURCES, type Source, type Article } from '@/lib/types.js';
-import { sha256, hashKey, diff, loadHash, storeHash } from '@/lib/store/hash.js';
-import { kv } from '@/lib/store/kv.js';
-import { crawl as crawlGuides } from '@/lib/crawl/guides.js';
-import { crawl as crawlDocs } from '@/lib/crawl/docs.js';
-import { crawl as crawlSupport } from '@/lib/crawl/support_freshdesk.js';
+import { SOURCES, type Source, type Article } from '@/lib/types';
+import { sha256, hashKey, diff, loadHash, storeHash } from '@/lib/store/hash';
+import { kv } from '@/lib/store/kv';
+import { crawl as crawlGuides } from '@/lib/crawl/guides';
+import { crawl as crawlDocs } from '@/lib/crawl/docs';
+import { crawl as crawlSupport } from '@/lib/crawl/support_freshdesk';
 
 loadEnv({ path: '.env.local' });
 

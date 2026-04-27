@@ -1,5 +1,5 @@
 import { Index } from '@upstash/vector';
-import type { ChunkMetadata, PreparedChunk, RetrievedChunk, Source } from '@/lib/types.js';
+import type { ChunkMetadata, PreparedChunk, RetrievedChunk, Source } from '@/lib/types';
 
 type VectorIndex = Index<Record<string, unknown>>;
 

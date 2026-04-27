@@ -1,4 +1,4 @@
-import type { Article, ChunkMetadata, PreparedChunk } from '@/lib/types.js';
+import type { Article, ChunkMetadata, PreparedChunk } from '@/lib/types';
 
 export interface ChunkOptions {
   maxChars?: number;

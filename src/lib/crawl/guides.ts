@@ -1,7 +1,7 @@
-import { fetchSitemap } from './sitemap.js';
-import { fetchText, Throttle } from './fetch.js';
-import { normalize } from './normalize.js';
-import type { Article } from '@/lib/types.js';
+import { fetchSitemap } from './sitemap';
+import { fetchText, Throttle } from './fetch';
+import { normalize } from './normalize';
+import type { Article } from '@/lib/types';
 
 const SITEMAP_URL = 'https://guides.delta.exchange/delta-exchange-user-guide/sitemap.xml';
 const URL_PREFIX = 'https://guides.delta.exchange/delta-exchange-user-guide/';

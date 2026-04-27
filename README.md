@@ -2,13 +2,13 @@
 
 Production system that audits Delta Exchange's Freshdesk support center against `guides.delta.exchange` and `docs.delta.exchange` (sources of truth) for factual contradictions and missing coverage. Runs daily on Vercel Cron, writes the full graded report to Notion, fires P0 issues to Slack.
 
-**Status:** M0–M3 complete. M4–M5 in progress.
+**Status:** M0–M4 complete. M5 in progress.
 
 - M0 — discovery
-- M1 — crawl + content-hash (765 hashes in Upstash Redis)
-- M2 — embed + retrieve (613 SoT chunks in Upstash Vector, BGE-large-en-v1.5)
-- M3 — compare + grade (Sonnet 4.6 via OpenRouter; compare/conflict/coverage detectors; ~$0.02/article)
-- M4 — output + deploy (Slack + Notion + Vercel cron)
+- M1 — crawl + content-hash (Upstash Redis)
+- M2 — embed + retrieve (1067 chunks in Upstash Vector, BGE-large-en-v1.5)
+- M3 — compare + grade (Sonnet 4.6 via OpenRouter; compare/conflict/coverage detectors)
+- M4 — output + deploy (Slack + Notion + Vercel cron at 04:00 IST daily)
 - M5 — first sweep + tune
 
 ## Quick start
@@ -73,6 +73,12 @@ pnpm tsx src/scripts/audit-one.ts <article-id>            # M3: audit one articl
 pnpm tsx src/scripts/audit-batch.ts --limit=20            # M3: audit a batch (dry-run)
 pnpm tsx src/scripts/audit-batch.ts --limit=20 --write    # M3: persist + dedup against last run
 pnpm tsx src/scripts/audit-batch.ts --coverage            # M3: also run coverage gap detector
+
+# M4: API route (started by `pnpm dev`, deployed via Vercel)
+curl -X GET 'http://localhost:3000/api/audit?dryRun=true&limit=5' \
+  -H "Authorization: Bearer $CRON_SECRET"                 # local dry run, no side effects
+curl -X GET 'http://localhost:3000/api/audit?force=true&limit=3' \
+  -H "Authorization: Bearer $CRON_SECRET"                 # local real run against your TEST Slack/Notion
 pnpm test                                     # vitest
 pnpm typecheck                                # tsc --noEmit
 pnpm lint                                     # next lint
@@ -81,6 +87,72 @@ pnpm lint                                     # next lint
 ## Architecture
 
 See `docs/M0-discovery.md` for the full discovery write-up and `CLAUDE.md` for project conventions.
+
+## Deployment (M4)
+
+### One-time setup
+
+1. **Slack**: create a webhook (Slack admin → Apps → Incoming Webhooks). Copy URL → `SLACK_WEBHOOK_URL`.
+2. **Notion**:
+   - notion.so/my-integrations → New integration → name "Delta Support Audit" → save.
+   - Copy Internal Integration Secret → `NOTION_API_KEY`.
+   - Create a Notion page titled "Delta Support Audit — Latest Run".
+   - On that page: ⋯ → Connections → add the integration.
+   - Copy the page ID (32-hex from the URL after the page title) → `NOTION_AUDIT_PAGE_ID`.
+3. **CRON_SECRET**: `openssl rand -hex 32` → `CRON_SECRET` in env.
+4. **Vercel project**: link this repo via dashboard or `vercel link`. Add ALL env vars from `.env.local.example` in Vercel project settings.
+
+### Deploy steps
+
+```bash
+# Local end-to-end test against TEST Slack channel + TEST Notion page first
+pnpm dev
+# then in another terminal:
+curl 'http://localhost:3000/api/audit?force=true&limit=3' -H "Authorization: Bearer $CRON_SECRET"
+# verify Slack receives a message (if any P0 found) and Notion page updates
+
+# Deploy preview
+git push origin <feature-branch>     # or: vercel
+# Trigger manually from Vercel dashboard. Confirm completes < 60s.
+
+# Promote to production
+git push origin main                 # or: vercel --prod
+
+# Confirm cron is enabled in Vercel dashboard (Settings → Crons)
+```
+
+### What runs on the cron
+
+- **Daily 22:30 UTC (04:00 IST)** — `/api/audit` runs:
+  1. Iterates Freshdesk articles, audits only those whose hash changed since last run (M1 hash store).
+  2. Concurrency 5; soft timeout at 50s, hard at 60s (Vercel Hobby limit).
+  3. If any new P0s found: posts a single grouped message to `#delta-support-audit`.
+  4. Replaces the Notion page body with the latest report (severity sections, conflicts, coverage gaps, run metadata).
+  5. Returns JSON summary.
+
+### What does NOT run on the cron
+
+- The full corpus sweep (~313 articles) — exceeds 60s. Run manually:
+  ```bash
+  pnpm tsx src/scripts/audit-batch.ts --write
+  ```
+- The coverage gap detector — runs over ~600 SoT chunks, exceeds 60s. Run manually weekly:
+  ```bash
+  pnpm tsx src/scripts/audit-batch.ts --coverage --write
+  ```
+- Both can move to Vercel cron after upgrading to Pro (300s function timeout) and updating `vercel.json`.
+
+### Operational query params
+
+```
+GET /api/audit
+  Authorization: Bearer ${CRON_SECRET}
+  ?dryRun=true            skip Slack + Notion side effects (default: false)
+  ?force=true             re-audit even unchanged articles (default: false)
+  ?limit=N                cap articles audited (default: all changed)
+  ?coverage=true          also run coverage detector (BLOCKED on Hobby — exceeds 60s)
+  ?coverageLimit=N        cap SoT chunks scanned for coverage
+```
 
 ## Ops runbook
 

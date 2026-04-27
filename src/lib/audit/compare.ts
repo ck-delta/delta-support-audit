@@ -1,8 +1,8 @@
-import { complete } from '@/lib/llm/openrouter.js';
-import { loadPrompt, renderPrompt } from '@/lib/llm/prompts.js';
-import { retrieveSotForArticle, formatChunksForPrompt } from './retrieve.js';
-import { parseAuditResponse, filterByConfidence } from './issue.js';
-import type { Article, Issue, ConflictIssue } from '@/lib/types.js';
+import { complete } from '@/lib/llm/openrouter';
+import { loadPrompt, renderPrompt } from '@/lib/llm/prompts';
+import { retrieveSotForArticle, formatChunksForPrompt } from './retrieve';
+import { parseAuditResponse, filterByConfidence } from './issue';
+import type { Article, Issue, ConflictIssue } from '@/lib/types';
 
 export interface AuditOptions {
   k?: number;

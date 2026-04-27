@@ -1,5 +1,5 @@
-import { retrieveTopK } from '@/lib/store/vector.js';
-import type { Article, RetrievedChunk } from '@/lib/types.js';
+import { retrieveTopK } from '@/lib/store/vector';
+import type { Article, RetrievedChunk } from '@/lib/types';
 
 export interface RetrievedSot {
   guides: RetrievedChunk[];

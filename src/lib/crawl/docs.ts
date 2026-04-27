@@ -1,7 +1,7 @@
 import * as cheerio from 'cheerio';
 import type { Element, AnyNode } from 'domhandler';
-import { fetchText } from './fetch.js';
-import type { Article } from '@/lib/types.js';
+import { fetchText } from './fetch';
+import type { Article } from '@/lib/types';
 
 const DOCS_URL = 'https://docs.delta.exchange/';
 

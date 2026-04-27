@@ -1,6 +1,6 @@
-import { fetchJson, Throttle } from './fetch.js';
-import { normalize } from './normalize.js';
-import type { Article } from '@/lib/types.js';
+import { fetchJson, Throttle } from './fetch';
+import { normalize } from './normalize';
+import type { Article } from '@/lib/types';
 
 interface FdCategory {
   id: number;

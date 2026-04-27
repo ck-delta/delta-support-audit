@@ -1,10 +1,10 @@
 import { config as loadEnv } from 'dotenv';
-import { auditArticle } from '@/lib/audit/compare.js';
-import { markIssues } from '@/lib/audit/dedupe.js';
-import { configFromEnv as fdConfig } from '@/lib/crawl/support_freshdesk.js';
-import { fetchJson } from '@/lib/crawl/fetch.js';
-import { normalize } from '@/lib/crawl/normalize.js';
-import type { Article } from '@/lib/types.js';
+import { auditArticle } from '@/lib/audit/compare';
+import { markIssues } from '@/lib/audit/dedupe';
+import { configFromEnv as fdConfig } from '@/lib/crawl/support_freshdesk';
+import { fetchJson } from '@/lib/crawl/fetch';
+import { normalize } from '@/lib/crawl/normalize';
+import type { Article } from '@/lib/types';
 
 loadEnv({ path: '.env.local' });
 

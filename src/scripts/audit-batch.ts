@@ -1,9 +1,9 @@
 import { config as loadEnv } from 'dotenv';
-import { auditArticle } from '@/lib/audit/compare.js';
-import { markIssues } from '@/lib/audit/dedupe.js';
-import { findCoverageGaps } from '@/lib/audit/coverage.js';
-import { crawl as crawlSupportFreshdesk } from '@/lib/crawl/support_freshdesk.js';
-import type { Article, Issue, ConflictIssue, CoverageIssue } from '@/lib/types.js';
+import { auditArticle } from '@/lib/audit/compare';
+import { markIssues } from '@/lib/audit/dedupe';
+import { findCoverageGaps } from '@/lib/audit/coverage';
+import { crawl as crawlSupportFreshdesk } from '@/lib/crawl/support_freshdesk';
+import type { Article, Issue, ConflictIssue, CoverageIssue } from '@/lib/types';
 
 loadEnv({ path: '.env.local' });
 

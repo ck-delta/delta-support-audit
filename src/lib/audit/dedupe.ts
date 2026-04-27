@@ -1,6 +1,6 @@
 import type { Redis } from '@upstash/redis';
-import { kv } from '@/lib/store/kv.js';
-import type { Issue, DedupStatus } from '@/lib/types.js';
+import { kv } from '@/lib/store/kv';
+import type { Issue, DedupStatus } from '@/lib/types';
 
 function key(supportUrl: string): string {
   return `issues:${supportUrl}`;

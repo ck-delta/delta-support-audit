@@ -1,4 +1,4 @@
-import { fetchText } from './fetch.js';
+import { fetchText } from './fetch';
 
 export function parseSitemapUrls(xml: string): string[] {
   const urls: string[] = [];

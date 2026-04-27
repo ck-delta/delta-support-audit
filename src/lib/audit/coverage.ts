@@ -1,9 +1,9 @@
 import { z } from 'zod';
-import { vec, retrieveTopK } from '@/lib/store/vector.js';
-import { complete } from '@/lib/llm/openrouter.js';
-import { loadPrompt, renderPrompt } from '@/lib/llm/prompts.js';
-import { sha256 } from '@/lib/store/hash.js';
-import type { CoverageIssue, Severity, SuggestedOwner } from '@/lib/types.js';
+import { vec, retrieveTopK } from '@/lib/store/vector';
+import { complete } from '@/lib/llm/openrouter';
+import { loadPrompt, renderPrompt } from '@/lib/llm/prompts';
+import { sha256 } from '@/lib/store/hash';
+import type { CoverageIssue, Severity, SuggestedOwner } from '@/lib/types';
 
 const SeveritySchema = z.enum(['P1', 'P2']);
 const OwnerSchema = z.enum(['Support', 'Docs', 'Engineering', 'Product']);

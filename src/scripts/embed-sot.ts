@@ -1,12 +1,12 @@
 import { config as loadEnv } from 'dotenv';
-import { type Article, type Source, SOURCES } from '@/lib/types.js';
-import { sha256 } from '@/lib/store/hash.js';
-import { kv } from '@/lib/store/kv.js';
-import { vec, upsertChunks, deleteChunks, retrieveTopK } from '@/lib/store/vector.js';
-import { chunkArticle } from '@/lib/embed/chunker.js';
-import { crawl as crawlGuides } from '@/lib/crawl/guides.js';
-import { crawl as crawlDocs } from '@/lib/crawl/docs.js';
-import { crawl as crawlSupportFreshdesk } from '@/lib/crawl/support_freshdesk.js';
+import { type Article, type Source, SOURCES } from '@/lib/types';
+import { sha256 } from '@/lib/store/hash';
+import { kv } from '@/lib/store/kv';
+import { vec, upsertChunks, deleteChunks, retrieveTopK } from '@/lib/store/vector';
+import { chunkArticle } from '@/lib/embed/chunker';
+import { crawl as crawlGuides } from '@/lib/crawl/guides';
+import { crawl as crawlDocs } from '@/lib/crawl/docs';
+import { crawl as crawlSupportFreshdesk } from '@/lib/crawl/support_freshdesk';
 
 loadEnv({ path: '.env.local' });
 
@@ -150,5 +150,4 @@ main().catch((e) => {
   process.exit(1);
 });
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _unusedDelete = deleteChunks; // kept for future cleanup workflows
+void deleteChunks; // kept for future cleanup workflows

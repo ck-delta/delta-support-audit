@@ -1,5 +1,5 @@
 import * as cheerio from 'cheerio';
-import type { Source, NormalizedDoc, Heading } from '@/lib/types.js';
+import type { Source, NormalizedDoc, Heading } from '@/lib/types';
 
 const BLOCK_TAGS = new Set([
   'p',
