@@ -108,7 +108,7 @@ describe('buildBlockKitPayload', () => {
       (b) => b.type === 'context',
     );
     const text = context?.elements?.[0]?.text ?? '';
-    expect(text).toContain('Full report');
+    expect(text).toContain('Open full report in Notion');
     expect(text).toContain('https://notion.so/page-123');
   });
 });

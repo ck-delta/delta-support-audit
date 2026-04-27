@@ -16,17 +16,34 @@ export async function postP0Summary(input: SlackPostInput): Promise<void> {
   await postWithRetry(url, payload);
 }
 
+function ownerEmoji(o?: string): string {
+  if (o === 'Support') return '👨‍💼';
+  if (o === 'Docs') return '📚';
+  if (o === 'Engineering') return '⚙️';
+  if (o === 'Product') return '💼';
+  return '❓';
+}
+
 export function buildBlockKitPayload(input: SlackPostInput): Record<string, unknown> {
   const { newP0Issues, metadata, notionPageUrl } = input;
-  const total = `P0=${metadata.totalIssues}` ;
-  const summaryLine = `Run: ${metadata.completedAt} · Articles audited: ${metadata.articlesAudited} · New P0: ${newP0Issues.length}${
-    notionPageUrl ? ` · <${notionPageUrl}|Full report>` : ''
-  }`;
+
+  const completedDate = metadata.completedAt.split('T')[0] ?? metadata.completedAt;
+  const completedTime = (metadata.completedAt.split('T')[1] ?? '').slice(0, 5);
+  const summaryLine = [
+    `🕒 *${completedDate} ${completedTime} UTC*`,
+    `📄 *${metadata.articlesAudited}* audited`,
+    `🚨 *${newP0Issues.length}* new P0`,
+    notionPageUrl ? `<${notionPageUrl}|*Open full report in Notion →*>` : '📝 Notion updated',
+  ].join('  ·  ');
 
   const blocks: unknown[] = [
     {
       type: 'header',
-      text: { type: 'plain_text', text: `Delta Support Audit — ${newP0Issues.length} new P0 issue(s)` },
+      text: {
+        type: 'plain_text',
+        text: `🚨 Delta Support Audit — ${newP0Issues.length} new P0 ${newP0Issues.length === 1 ? 'issue' : 'issues'}`,
+        emoji: true,
+      },
     },
     { type: 'context', elements: [{ type: 'mrkdwn', text: summaryLine }] },
     { type: 'divider' },
@@ -34,23 +51,36 @@ export function buildBlockKitPayload(input: SlackPostInput): Record<string, unkn
 
   for (let i = 0; i < newP0Issues.length; i++) {
     const issue = newP0Issues[i]!;
-    const owner = issue.suggestedOwner ?? '?';
-    const lines = [
-      `*Issue ${i + 1}: ${truncate(issue.summary, 220)}*`,
-      issue.supportUrl ? `Support: ${issue.supportUrl}` : '',
-      issue.sotUrl ? `SoT: ${issue.sotUrl}` : '',
-      issue.supportQuote ? `> support: ${truncate(issue.supportQuote, 200)}` : '',
-      issue.sotQuote ? `> sot: ${truncate(issue.sotQuote, 200)}` : '',
-      `confidence ${issue.confidence.toFixed(2)} · suggested owner: ${owner}`,
-    ].filter(Boolean);
+    const owner = issue.suggestedOwner ?? 'Unassigned';
+    const oEmoji = ownerEmoji(issue.suggestedOwner);
+
+    const lines: string[] = [];
+    lines.push(`*${i + 1}. ${truncate(issue.summary, 220)}*`);
+    lines.push(`${oEmoji} *Owner:* ${owner}  ·  *Confidence:* ${issue.confidence.toFixed(2)}`);
+    if (issue.supportQuote) {
+      lines.push(`> *Support:* ${truncate(issue.supportQuote, 180)}`);
+    }
+    if (issue.sotQuote) {
+      lines.push(`> *SoT:* ${truncate(issue.sotQuote, 180)}`);
+    }
+    const linkLine: string[] = [];
+    if (issue.supportUrl) linkLine.push(`<${issue.supportUrl}|Support →>`);
+    if (issue.sotUrl) linkLine.push(`<${issue.sotUrl}|SoT →>`);
+    if (linkLine.length > 0) lines.push(linkLine.join('  ·  '));
+
     blocks.push({
       type: 'section',
       text: { type: 'mrkdwn', text: lines.join('\n') },
     });
+
+    // Divider between issues (skip after last)
+    if (i < newP0Issues.length - 1) {
+      blocks.push({ type: 'divider' });
+    }
   }
 
   return {
-    text: `Delta Support Audit — ${newP0Issues.length} new P0 issue(s) · ${total}`,
+    text: `Delta Support Audit — ${newP0Issues.length} new P0 issue(s)`,
     blocks,
   };
 }

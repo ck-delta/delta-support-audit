@@ -64,98 +64,194 @@ export function buildBlocks(report: AuditReport): Block[] {
 
   const blocks: Block[] = [];
   blocks.push(h1('Delta Support Audit — Latest Run'));
+
+  // Callout: rich text with bolded labels
+  const completedDate = m.completedAt.split('T')[0] ?? m.completedAt;
+  const completedTime = (m.completedAt.split('T')[1] ?? '').slice(0, 8);
   blocks.push(
-    callout(
-      [
-        `Run completed: ${m.completedAt}`,
-        `Articles audited: ${m.articlesAudited} (changed: ${m.articlesChanged} of ${m.articlesChecked})`,
-        `New issues: ${m.newIssues} · Still-open: ${m.stillOpenIssues} · Resolved: ${m.resolvedIssues}`,
-        m.truncated ? `⚠ Truncated (timed out)` : '',
-      ]
-        .filter(Boolean)
-        .join(' · '),
-    ),
+    calloutRich([
+      bold('Run completed: '),
+      text(`${completedDate} ${completedTime} UTC`),
+      text('  ·  '),
+      bold('Articles audited: '),
+      text(`${m.articlesAudited}`),
+      text(` (${m.articlesChanged} changed of ${m.articlesChecked})`),
+      text('  ·  '),
+      bold('New issues: '),
+      text(`${m.newIssues}`),
+      text(`  ·  `),
+      bold('Still-open: '),
+      text(`${m.stillOpenIssues}`),
+      text(`  ·  `),
+      bold('Resolved: '),
+      text(`${m.resolvedIssues}`),
+      ...(m.truncated ? [text('  ·  '), bold('⚠ Truncated (timed out)')] : []),
+    ]),
   );
 
   blocks.push(h2('Summary'));
   blocks.push(
-    paragraph(
-      `Issues by severity — P0: **${totals.P0}** · P1: **${totals.P1}** · P2: **${totals.P2}** · Conflicts: **${report.conflicts.length}** · Coverage gaps: **${report.coverageGaps.length}**`,
-    ),
+    paragraphRich([
+      text('Issues by severity — '),
+      bold(`🚨 P0: ${totals.P0}`),
+      text('  ·  '),
+      bold(`⚠️ P1: ${totals.P1}`),
+      text('  ·  '),
+      bold(`📝 P2: ${totals.P2}`),
+      text('  ·  '),
+      bold(`🔀 Conflicts: ${report.conflicts.length}`),
+      text('  ·  '),
+      bold(`🕳️ Coverage gaps: ${report.coverageGaps.length}`),
+    ]),
   );
 
   pushSeveritySection(blocks, 'P0', report.issuesBySeverity.P0);
   pushSeveritySection(blocks, 'P1', report.issuesBySeverity.P1);
   pushSeveritySection(blocks, 'P2', report.issuesBySeverity.P2);
 
-  blocks.push(h2('Source-of-Truth Conflicts (guides ↔ docs)'));
+  blocks.push(h2(`🔀 Source-of-Truth Conflicts (${report.conflicts.length})`));
   if (report.conflicts.length === 0) blocks.push(paragraph('(none)'));
   else for (const c of report.conflicts) blocks.push(toggleConflict(c));
 
-  blocks.push(h2('Coverage Gaps'));
+  blocks.push(h2(`🕳️ Coverage Gaps (${report.coverageGaps.length})`));
   if (report.coverageGaps.length === 0) blocks.push(paragraph('(none)'));
   else for (const g of report.coverageGaps) blocks.push(toggleCoverage(g));
 
   blocks.push(h2('Run Metadata'));
   blocks.push(
-    paragraph(
-      [
-        `Model: ${m.model}`,
-        `Duration: ${(m.durationMs / 1000).toFixed(1)}s`,
-        `Tokens: prompt=${m.promptTokens} completion=${m.completionTokens} total=${m.promptTokens + m.completionTokens}`,
-        `Cost (est): $${m.costEstimateUsd.toFixed(4)}`,
-        `Errors: ${m.errors}`,
-      ].join(' · '),
-    ),
+    paragraphRich([
+      bold('Model: '),
+      text(m.model),
+      text('  ·  '),
+      bold('Duration: '),
+      text(`${(m.durationMs / 1000).toFixed(1)}s`),
+      text('  ·  '),
+      bold('Tokens: '),
+      text(`${m.promptTokens + m.completionTokens} (${m.promptTokens} in / ${m.completionTokens} out)`),
+      text('  ·  '),
+      bold('Cost (est): '),
+      text(`$${m.costEstimateUsd.toFixed(4)}`),
+      text('  ·  '),
+      bold('Errors: '),
+      text(`${m.errors}`),
+    ]),
   );
 
   return blocks;
 }
 
+function calloutRich(parts: RichText[]): Block {
+  return {
+    object: 'block',
+    type: 'callout',
+    callout: { rich_text: parts, icon: { type: 'emoji', emoji: '📋' } },
+  };
+}
+
 function pushSeveritySection(blocks: Block[], severity: Severity, issues: Issue[]): void {
-  blocks.push(h2(`${severity} Issues`));
-  if (issues.length === 0) blocks.push(paragraph('(none)'));
-  else for (const i of issues) blocks.push(toggleIssue(i));
+  blocks.push(h2(`${severityEmoji(severity)} ${severity} Issues (${issues.length})`));
+  if (issues.length === 0) {
+    blocks.push(paragraph('(none)'));
+    return;
+  }
+  for (const i of issues) blocks.push(toggleIssue(i));
+}
+
+function severityEmoji(s: Severity): string {
+  return s === 'P0' ? '🚨' : s === 'P1' ? '⚠️' : '📝';
+}
+
+function ownerEmoji(o?: string): string {
+  if (o === 'Support') return '👨‍💼';
+  if (o === 'Docs') return '📚';
+  if (o === 'Engineering') return '⚙️';
+  if (o === 'Product') return '💼';
+  return '❓';
 }
 
 function toggleIssue(issue: Issue): Block {
-  const title = `[${issue.severity}] [${issue.status}] ${truncate(issue.summary, 180)}`;
-  const lines: string[] = [];
-  if (issue.supportUrl) lines.push(`Support: ${issue.supportUrl}`);
-  if (issue.sotUrl) lines.push(`SoT: ${issue.sotUrl}`);
-  if (issue.supportQuote) lines.push(`Support quote: "${truncate(issue.supportQuote, 220)}"`);
-  if (issue.sotQuote) lines.push(`SoT quote: "${truncate(issue.sotQuote, 220)}"`);
-  lines.push(`Confidence: ${issue.confidence.toFixed(2)}`);
-  if (issue.suggestedOwner) lines.push(`Suggested owner: ${issue.suggestedOwner}`);
-  lines.push(`First seen: ${issue.firstSeenAt}`);
-  lines.push(`Last seen: ${issue.lastSeenAt}`);
-  return toggle(title, lines.map((l) => paragraph(l)));
+  // Compact title: emoji + bold severity + owner + summary
+  const titleRichText: RichText[] = [
+    text(`${severityEmoji(issue.severity)} `),
+    bold(issue.severity),
+    text(` · ${ownerEmoji(issue.suggestedOwner)} ${issue.suggestedOwner ?? 'Unassigned'} · `),
+    text(truncate(issue.summary, 180)),
+  ];
+
+  const children: Block[] = [];
+
+  // Article links
+  if (issue.supportUrl) {
+    children.push(paragraphRich([bold('Support article: '), link('Open in Freshdesk →', issue.supportUrl)]));
+  }
+  if (issue.sotUrl) {
+    children.push(paragraphRich([bold('Source of truth: '), link('Open SoT →', issue.sotUrl)]));
+  }
+
+  // Quotes (as quote blocks for visual distinction)
+  if (issue.supportQuote) {
+    children.push(quoteBlock([bold('Support says: '), text(`"${truncate(issue.supportQuote, 240)}"`)]));
+  }
+  if (issue.sotQuote) {
+    children.push(quoteBlock([bold('SoT says: '), text(`"${truncate(issue.sotQuote, 240)}"`)]));
+  }
+
+  // Metadata
+  const metaParts: RichText[] = [
+    bold('Confidence: '),
+    text(`${issue.confidence.toFixed(2)}`),
+    text(' · '),
+    bold('Status: '),
+    text(issue.status),
+    text(' · '),
+    bold('First seen: '),
+    text(issue.firstSeenAt.split('T')[0] ?? issue.firstSeenAt),
+  ];
+  children.push(paragraphRich(metaParts));
+
+  return toggleRich(titleRichText, children);
 }
 
 function toggleConflict(c: ConflictIssue): Block {
-  const title = `[${c.severity}] ${truncate(c.summary, 180)}`;
-  const lines = [
-    `Guides: ${c.guidesUrl}`,
-    `Guides quote: "${truncate(c.guidesQuote, 220)}"`,
-    `Docs: ${c.docsUrl}`,
-    `Docs quote: "${truncate(c.docsQuote, 220)}"`,
-    `Confidence: ${c.confidence.toFixed(2)}`,
-    `First seen: ${c.firstSeenAt} · Last seen: ${c.lastSeenAt}`,
+  const titleRichText: RichText[] = [
+    text(`🔀 `),
+    bold(c.severity),
+    text(' · Conflict (guides ↔ docs) · '),
+    text(truncate(c.summary, 180)),
   ];
-  return toggle(title, lines.map((l) => paragraph(l)));
+
+  const children: Block[] = [
+    paragraphRich([bold('Guides: '), link('Open guides chunk →', c.guidesUrl)]),
+    quoteBlock([bold('Guides says: '), text(`"${truncate(c.guidesQuote, 240)}"`)]),
+    paragraphRich([bold('Docs: '), link('Open docs chunk →', c.docsUrl)]),
+    quoteBlock([bold('Docs says: '), text(`"${truncate(c.docsQuote, 240)}"`)]),
+    paragraphRich([
+      bold('Confidence: '),
+      text(`${c.confidence.toFixed(2)}`),
+      text(' · '),
+      bold('First seen: '),
+      text(c.firstSeenAt.split('T')[0] ?? c.firstSeenAt),
+    ]),
+  ];
+  return toggleRich(titleRichText, children);
 }
 
 function toggleCoverage(g: CoverageIssue): Block {
-  const title = `[${g.severity}] ${truncate(g.summary, 180)}`;
-  const lines = [
-    `SoT (${g.sotSource}): ${g.sotUrl}`,
-    `Closest support match similarity: ${g.similarity.toFixed(2)}`,
-    `Suggested support topic: ${g.suggestedSupportTopic}`,
-    `Missing aspects: ${g.missingAspects.join(', ') || '-'}`,
-    `Suggested owner: ${g.suggestedOwner}`,
-    `Confidence: ${g.confidence.toFixed(2)}`,
+  const titleRichText: RichText[] = [
+    text(`🕳️ `),
+    bold(g.severity),
+    text(` · ${ownerEmoji(g.suggestedOwner)} ${g.suggestedOwner} · `),
+    text(truncate(g.summary, 180)),
   ];
-  return toggle(title, lines.map((l) => paragraph(l)));
+
+  const children: Block[] = [
+    paragraphRich([bold(`SoT (${g.sotSource}): `), link('Open SoT →', g.sotUrl)]),
+    paragraphRich([bold('Closest support match similarity: '), text(g.similarity.toFixed(2))]),
+    paragraphRich([bold('Suggested support topic: '), text(g.suggestedSupportTopic || '—')]),
+    paragraphRich([bold('Missing aspects: '), text(g.missingAspects.join(', ') || '—')]),
+    paragraphRich([bold('Confidence: '), text(g.confidence.toFixed(2))]),
+  ];
+  return toggleRich(titleRichText, children);
 }
 
 function h1(text: string): Block {
@@ -201,6 +297,50 @@ function toggle(title: string, children: Block[]): Block {
       rich_text: chunkRichText(title),
       children,
     },
+  };
+}
+
+// Rich-text helpers for bold + links
+
+interface RichText {
+  type: 'text';
+  text: { content: string; link?: { url: string } };
+  annotations?: { bold?: boolean; italic?: boolean; code?: boolean; color?: string };
+}
+
+function text(content: string): RichText {
+  return { type: 'text', text: { content } };
+}
+
+function bold(content: string): RichText {
+  return { type: 'text', text: { content }, annotations: { bold: true } };
+}
+
+function link(label: string, url: string): RichText {
+  return { type: 'text', text: { content: label, link: { url } } };
+}
+
+function paragraphRich(parts: RichText[]): Block {
+  return {
+    object: 'block',
+    type: 'paragraph',
+    paragraph: { rich_text: parts },
+  };
+}
+
+function quoteBlock(parts: RichText[]): Block {
+  return {
+    object: 'block',
+    type: 'quote',
+    quote: { rich_text: parts },
+  };
+}
+
+function toggleRich(titleParts: RichText[], children: Block[]): Block {
+  return {
+    object: 'block',
+    type: 'toggle',
+    toggle: { rich_text: titleParts, children },
   };
 }
 
