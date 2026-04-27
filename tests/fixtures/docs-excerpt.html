@@ -1,0 +1,1302 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Delta Exchange Api</title>
+    <link href="images/favicon.svg" rel="icon" type="image/svg" />
+    <style>
+      .highlight table td { padding: 5px; }
+.highlight table pre { margin: 0; }
+.highlight .gh {
+  color: #999999;
+}
+.highlight .sr {
+  color: #f6aa11;
+}
+.highlight .go {
+  color: #888888;
+}
+.highlight .gp {
+  color: #555555;
+}
+.highlight .gs {
+}
+.highlight .gu {
+  color: #aaaaaa;
+}
+.highlight .nb {
+  color: #f6aa11;
+}
+.highlight .cm {
+  color: #75715e;
+}
+.highlight .cp {
+  color: #75715e;
+}
+.highlight .c1 {
+  color: #75715e;
+}
+.highlight .cs {
+  color: #75715e;
+}
+.highlight .c, .highlight .cd {
+  color: #75715e;
+}
+.highlight .err {
+  color: #960050;
+}
+.highlight .gr {
+  color: #960050;
+}
+.highlight .gt {
+  color: #960050;
+}
+.highlight .gd {
+  color: #49483e;
+}
+.highlight .gi {
+  color: #49483e;
+}
+.highlight .ge {
+  color: #49483e;
+}
+.highlight .kc {
+  color: #66d9ef;
+}
+.highlight .kd {
+  color: #66d9ef;
+}
+.highlight .kr {
+  color: #66d9ef;
+}
+.highlight .no {
+  color: #66d9ef;
+}
+.highlight .kt {
+  color: #66d9ef;
+}
+.highlight .mf {
+  color: #ae81ff;
+}
+.highlight .mh {
+  color: #ae81ff;
+}
+.highlight .il {
+  color: #ae81ff;
+}
+.highlight .mi {
+  color: #ae81ff;
+}
+.highlight .mo {
+  color: #ae81ff;
+}
+.highlight .m, .highlight .mb, .highlight .mx {
+  color: #ae81ff;
+}
+.highlight .sc {
+  color: #ae81ff;
+}
+.highlight .se {
+  color: #ae81ff;
+}
+.highlight .ss {
+  color: #ae81ff;
+}
+.highlight .sd {
+  color: #e6db74;
+}
+.highlight .s2 {
+  color: #e6db74;
+}
+.highlight .sb {
+  color: #e6db74;
+}
+.highlight .sh {
+  color: #e6db74;
+}
+.highlight .si {
+  color: #e6db74;
+}
+.highlight .sx {
+  color: #e6db74;
+}
+.highlight .s1 {
+  color: #e6db74;
+}
+.highlight .s {
+  color: #e6db74;
+}
+.highlight .na {
+  color: #a6e22e;
+}
+.highlight .nc {
+  color: #a6e22e;
+}
+.highlight .nd {
+  color: #a6e22e;
+}
+.highlight .ne {
+  color: #a6e22e;
+}
+.highlight .nf {
+  color: #a6e22e;
+}
+.highlight .vc {
+  color: #ffffff;
+}
+.highlight .nn {
+  color: #ffffff;
+}
+.highlight .nl {
+  color: #ffffff;
+}
+.highlight .ni {
+  color: #ffffff;
+}
+.highlight .bp {
+  color: #ffffff;
+}
+.highlight .vg {
+  color: #ffffff;
+}
+.highlight .vi {
+  color: #ffffff;
+}
+.highlight .nv {
+  color: #ffffff;
+}
+.highlight .w {
+  color: #ffffff;
+}
+.highlight {
+  color: #ffffff;
+}
+.highlight .n, .highlight .py, .highlight .nx {
+  color: #ffffff;
+}
+.highlight .ow {
+  color: #f92672;
+}
+.highlight .nt {
+  color: #f92672;
+}
+.highlight .k, .highlight .kv {
+  color: #f92672;
+}
+.highlight .kn {
+  color: #f92672;
+}
+.highlight .kp {
+  color: #f92672;
+}
+.highlight .o {
+  color: #f92672;
+}
+    </style>
+    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
+      <script src="javascripts/all.js"></script>
+  </head>
+
+  <body class="index" data-languages="[&quot;python&quot;,&quot;shell&quot;,&quot;ruby&quot;]">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="images/navbar.png" alt="Navbar" />
+      </span>
+    </a>
+    <div class="toc-wrapper">
+      <img src="images/logo.png" class="logo" alt="Logo" />
+        <div class="lang-selector">
+              <a href="#" data-language-name="python">Python</a>
+              <a href="#" data-language-name="shell">cURL</a>
+              <a href="#" data-language-name="ruby">Ruby</a>
+        </div>
+        <div class="search">
+          <input type="text" class="search" id="input-search" placeholder="Search">
+        </div>
+        <ul class="search-results"></ul>
+      <ul id="toc" class="toc-list-h1">
+          <li>
+            <a href="#introduction" class="toc-h1 toc-link" data-title="Introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#general-information" class="toc-h1 toc-link" data-title="General Information">General Information</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#definitions" class="toc-h2 toc-link" data-title="Definitions">Definitions</a>
+                  </li>
+                  <li>
+                    <a href="#symbology" class="toc-h2 toc-link" data-title="Symbology">Symbology</a>
+                  </li>
+                  <li>
+                    <a href="#pagination" class="toc-h2 toc-link" data-title="Pagination">Pagination</a>
+                  </li>
+                  <li>
+                    <a href="#data-centers" class="toc-h2 toc-link" data-title="Data Centers">Data Centers</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#authentication" class="toc-h1 toc-link" data-title="Authentication">Authentication</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#common-errors" class="toc-h2 toc-link" data-title="Common Errors">Common Errors</a>
+                  </li>
+                  <li>
+                    <a href="#generating-an-api-key" class="toc-h2 toc-link" data-title="Generating an API Key">Generating an API Key</a>
+                  </li>
+                  <li>
+                    <a href="#api-key-permissions" class="toc-h2 toc-link" data-title="API Key Permissions">API Key Permissions</a>
+                  </li>
+                  <li>
+                    <a href="#creating-a-request" class="toc-h2 toc-link" data-title="Creating a Request">Creating a Request</a>
+                  </li>
+                  <li>
+                    <a href="#signing-a-message" class="toc-h2 toc-link" data-title="Signing a Message">Signing a Message</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#rate-limits" class="toc-h1 toc-link" data-title="Rate Limits">Rate Limits</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#api-amp-product-rate-limits" class="toc-h2 toc-link" data-title="API &amp; product rate limits">API &amp; product rate limits</a>
+                  </li>
+                  <li>
+                    <a href="#increasing-your-rate-limits" class="toc-h2 toc-link" data-title="Increasing your rate limits">Increasing your rate limits</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#system-status" class="toc-h1 toc-link" data-title="System Status">System Status</a>
+          </li>
+          <li>
+            <a href="#types" class="toc-h1 toc-link" data-title="Types">Types</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#timestamps" class="toc-h2 toc-link" data-title="Timestamps">Timestamps</a>
+                  </li>
+                  <li>
+                    <a href="#numbers" class="toc-h2 toc-link" data-title="Numbers">Numbers</a>
+                  </li>
+                  <li>
+                    <a href="#ids" class="toc-h2 toc-link" data-title="IDs">IDs</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#response-formats" class="toc-h1 toc-link" data-title="Response Formats">Response Formats</a>
+          </li>
+          <li>
+            <a href="#ApiSection" class="toc-h1 toc-link" data-title="Rest Api">Rest Api</a>
+          </li>
+          <li>
+            <a href="#delta-exchange-api-v2-assets" class="toc-h1 toc-link" data-title="Assets">Assets</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#get-list-of-all-assets" class="toc-h2 toc-link" data-title="Get list of all assets">Get list of all assets</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#delta-exchange-api-v2-indices" class="toc-h1 toc-link" data-title="Indices">Indices</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#get-indices" class="toc-h2 toc-link" data-title="Get indices">Get indices</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#delta-exchange-api-v2-products" class="toc-h1 toc-link" data-title="Products">Products</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#get-list-of-products" class="toc-h2 toc-link" data-title="Get list of products">Get list of products</a>
+                  </li>
+                  <li>
+                    <a href="#get-product-by-symbol" class="toc-h2 toc-link" data-title="Get product by symbol">Get product by symbol</a>
+                  </li>
+                  <li>
+                    <a href="#get-tickers-for-products" class="toc-h2 toc-link" data-title="Get tickers for products">Get tickers for products</a>
+                  </li>
+                  <li>
+                    <a href="#get-ticker-for-a-product-by-symbol" class="toc-h2 toc-link" data-title="Get ticker for a product by symbol">Get ticker for a product by symbol</a>
+                  </li>
+                  <li>
+                    <a href="#get-option-chain" class="toc-h2 toc-link" data-title="Get option chain">Get option chain</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#delta-exchange-api-v2-orders" class="toc-h1 toc-link" data-title="Orders">Orders</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#place-order" class="toc-h2 toc-link" data-title="Place Order">Place Order</a>
+                  </li>
+                  <li>
+                    <a href="#cancel-order" class="toc-h2 toc-link" data-title="Cancel Order">Cancel Order</a>
+                  </li>
+                  <li>
+                    <a href="#edit-order" class="toc-h2 toc-link" data-title="Edit Order">Edit Order</a>
+                  </li>
+                  <li>
+                    <a href="#get-active-orders" class="toc-h2 toc-link" data-title="Get Active Orders">Get Active Orders</a>
+                  </li>
+                  <li>
+                    <a href="#place-bracket-order" class="toc-h2 toc-link" data-title="Place Bracket order">Place Bracket order</a>
+                  </li>
+                  <li>
+                    <a href="#edit-bracket-order" class="toc-h2 toc-link" data-title="Edit Bracket order">Edit Bracket order</a>
+                  </li>
+                  <li>
+                    <a href="#cancel-all-open-orders" class="toc-h2 toc-link" data-title="Cancel all open orders">Cancel all open orders</a>
+                  </li>
+                  <li>
+                    <a href="#create-batch-orders" class="toc-h2 toc-link" data-title="Create batch orders">Create batch orders</a>
+                  </li>
+                  <li>
+                    <a href="#edit-batch-orders" class="toc-h2 toc-link" data-title="Edit batch orders">Edit batch orders</a>
+                  </li>
+                  <li>
+                    <a href="#delete-batch-orders" class="toc-h2 toc-link" data-title="Delete batch orders">Delete batch orders</a>
+                  </li>
+                  <li>
+                    <a href="#get-order-by-id" class="toc-h2 toc-link" data-title="Get Order by id">Get Order by id</a>
+                  </li>
+                  <li>
+                    <a href="#get-order-by-client-oid" class="toc-h2 toc-link" data-title="Get Order by client oid">Get Order by client oid</a>
+                  </li>
+                  <li>
+                    <a href="#change-order-leverage" class="toc-h2 toc-link" data-title="Change order leverage">Change order leverage</a>
+                  </li>
+                  <li>
+                    <a href="#get-order-leverage" class="toc-h2 toc-link" data-title="Get order leverage">Get order leverage</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#delta-exchange-api-v2-positions" class="toc-h1 toc-link" data-title="Positions">Positions</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#get-margined-positions" class="toc-h2 toc-link" data-title="Get margined positions">Get margined positions</a>
+                  </li>
+                  <li>
+                    <a href="#get-position" class="toc-h2 toc-link" data-title="Get position">Get position</a>
+                  </li>
+                  <li>
+                    <a href="#auto-topup" class="toc-h2 toc-link" data-title="Auto Topup">Auto Topup</a>
+                  </li>
+                  <li>
+                    <a href="#add-remove-position-margin" class="toc-h2 toc-link" data-title="Add/Remove position margin">Add/Remove position margin</a>
+                  </li>
+                  <li>
+                    <a href="#close-all-positions" class="toc-h2 toc-link" data-title="Close all positions">Close all positions</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#delta-exchange-api-v2-tradehistory" class="toc-h1 toc-link" data-title="TradeHistory">TradeHistory</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#get-order-history-cancelled-and-closed" class="toc-h2 toc-link" data-title="Get order history (cancelled and closed)">Get order history (cancelled and closed)</a>
+                  </li>
+                  <li>
+                    <a href="#get-user-fills-by-filters" class="toc-h2 toc-link" data-title="GET user fills by filters">GET user fills by filters</a>
+                  </li>
+                  <li>
+                    <a href="#download-fills-history" class="toc-h2 toc-link" data-title="Download Fills history">Download Fills history</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#delta-exchange-api-v2-orderbook" class="toc-h1 toc-link" data-title="Orderbook">Orderbook</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#get-l2-orderbook" class="toc-h2 toc-link" data-title="Get L2 orderbook">Get L2 orderbook</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#delta-exchange-api-v2-trades" class="toc-h1 toc-link" data-title="Trades">Trades</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#get-public-trades" class="toc-h2 toc-link" data-title="Get public trades">Get public trades</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#delta-exchange-api-v2-wallet" class="toc-h1 toc-link" data-title="Wallet">Wallet</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#get-wallet-balances" class="toc-h2 toc-link" data-title="Get Wallet Balances">Get Wallet Balances</a>
+                  </li>
+                  <li>
+                    <a href="#get-wallet-transactions" class="toc-h2 toc-link" data-title="Get Wallet transactions">Get Wallet transactions</a>
+                  </li>
+                  <li>
+                    <a href="#download-wallet-transactions" class="toc-h2 toc-link" data-title="Download Wallet transactions">Download Wallet transactions</a>
+                  </li>
+                  <li>
+                    <a href="#request-asset-transfer" class="toc-h2 toc-link" data-title="Request asset transfer">Request asset transfer</a>
+                  </li>
+                  <li>
+                    <a href="#request-subaccount-balance-transfer-history" class="toc-h2 toc-link" data-title="Request subaccount balance transfer history.">Request subaccount balance transfer history.</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#delta-exchange-api-v2-stats" class="toc-h1 toc-link" data-title="Stats">Stats</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#get-volume-stats" class="toc-h2 toc-link" data-title="Get volume stats">Get volume stats</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#delta-exchange-api-v2-mmp" class="toc-h1 toc-link" data-title="MMP">MMP</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#update-mmp-config" class="toc-h2 toc-link" data-title="Update MMP config">Update MMP config</a>
+                  </li>
+                  <li>
+                    <a href="#reset-mmp" class="toc-h2 toc-link" data-title="Reset MMP">Reset MMP</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#delta-exchange-api-v2-account" class="toc-h1 toc-link" data-title="Account">Account</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#get-users-trading-preferences" class="toc-h2 toc-link" data-title="Get users trading preferences">Get users trading preferences</a>
+                  </li>
+                  <li>
+                    <a href="#update-users-trading-preferences" class="toc-h2 toc-link" data-title="Update users trading preferences">Update users trading preferences</a>
+                  </li>
+                  <li>
+                    <a href="#get-subaccounts" class="toc-h2 toc-link" data-title="Get subaccounts">Get subaccounts</a>
+                  </li>
+                  <li>
+                    <a href="#get-user" class="toc-h2 toc-link" data-title="Get user">Get user</a>
+                  </li>
+                  <li>
+                    <a href="#change-margin-mode" class="toc-h2 toc-link" data-title="Change margin mode">Change margin mode</a>
+                  </li>
+                  <li>
+                    <a href="#get-current-rate-limit-quota" class="toc-h2 toc-link" data-title="Get current rate limit quota">Get current rate limit quota</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#delta-exchange-api-v2-heartbeat-management" class="toc-h1 toc-link" data-title="Heartbeat Management">Heartbeat Management</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#create-heartbeat" class="toc-h2 toc-link" data-title="Create Heartbeat">Create Heartbeat</a>
+                  </li>
+                  <li>
+                    <a href="#send-heartbeat-acknowledgment" class="toc-h2 toc-link" data-title="Send Heartbeat Acknowledgment">Send Heartbeat Acknowledgment</a>
+                  </li>
+                  <li>
+                    <a href="#get-heartbeats" class="toc-h2 toc-link" data-title="Get Heartbeats">Get Heartbeats</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#delta-exchange-api-v2-settlement-prices" class="toc-h1 toc-link" data-title="Settlement Prices">Settlement Prices</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#get-product-settlement-prices" class="toc-h2 toc-link" data-title="Get product settlement prices">Get product settlement prices</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#delta-exchange-api-v2-historical-ohlc-candles-sparklines" class="toc-h1 toc-link" data-title="Historical OHLC Candles/Sparklines">Historical OHLC Candles/Sparklines</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#get-historical-ohlc-candles" class="toc-h2 toc-link" data-title="GET historical ohlc candles">GET historical ohlc candles</a>
+                  </li>
+                  <li>
+                    <a href="#get-product-history-sparklines" class="toc-h2 toc-link" data-title="GET product history sparklines">GET product history sparklines</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#schemas" class="toc-h1 toc-link" data-title="Schemas">Schemas</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#tocSapisuccessresponse" class="toc-h2 toc-link" data-title="ApiSuccessResponse">ApiSuccessResponse</a>
+                  </li>
+                  <li>
+                    <a href="#tocSapierrorresponse" class="toc-h2 toc-link" data-title="ApiErrorResponse">ApiErrorResponse</a>
+                  </li>
+                  <li>
+                    <a href="#tocSindex" class="toc-h2 toc-link" data-title="Index">Index</a>
+                  </li>
+                  <li>
+                    <a href="#tocSarrayofindices" class="toc-h2 toc-link" data-title="ArrayOfIndices">ArrayOfIndices</a>
+                  </li>
+                  <li>
+                    <a href="#tocSproductspecs" class="toc-h2 toc-link" data-title="ProductSpecs">ProductSpecs</a>
+                  </li>
+                  <li>
+                    <a href="#tocSasset" class="toc-h2 toc-link" data-title="Asset">Asset</a>
+                  </li>
+                  <li>
+                    <a href="#tocSarrayofassets" class="toc-h2 toc-link" data-title="ArrayOfAssets">ArrayOfAssets</a>
+                  </li>
+                  <li>
+                    <a href="#tocSproduct" class="toc-h2 toc-link" data-title="Product">Product</a>
+                  </li>
+                  <li>
+                    <a href="#tocSproductcategories" class="toc-h2 toc-link" data-title="ProductCategories">ProductCategories</a>
+                  </li>
+                  <li>
+                    <a href="#tocSarrayofproducts" class="toc-h2 toc-link" data-title="ArrayOfProducts">ArrayOfProducts</a>
+                  </li>
+                  <li>
+                    <a href="#tocSorder" class="toc-h2 toc-link" data-title="Order">Order</a>
+                  </li>
+                  <li>
+                    <a href="#tocSarrayoforders" class="toc-h2 toc-link" data-title="ArrayOfOrders">ArrayOfOrders</a>
+                  </li>
+                  <li>
+                    <a href="#tocScreateorderrequest" class="toc-h2 toc-link" data-title="CreateOrderRequest">CreateOrderRequest</a>
+                  </li>
+                  <li>
+                    <a href="#tocSbatchcreateorder" class="toc-h2 toc-link" data-title="BatchCreateOrder">BatchCreateOrder</a>
+                  </li>
+                  <li>
+                    <a href="#tocSbatchcreateordersrequest" class="toc-h2 toc-link" data-title="BatchCreateOrdersRequest">BatchCreateOrdersRequest</a>
+                  </li>
+                  <li>
+                    <a href="#tocSarrayofcreateorderrequest" class="toc-h2 toc-link" data-title="ArrayOfCreateOrderRequest">ArrayOfCreateOrderRequest</a>
+                  </li>
+                  <li>
+                    <a href="#tocSeditorderrequest" class="toc-h2 toc-link" data-title="EditOrderRequest">EditOrderRequest</a>
+                  </li>
+                  <li>
+                    <a href="#tocSbatcheditorder" class="toc-h2 toc-link" data-title="BatchEditOrder">BatchEditOrder</a>
+                  </li>
+                  <li>
+                    <a href="#tocSbatcheditordersrequest" class="toc-h2 toc-link" data-title="BatchEditOrdersRequest">BatchEditOrdersRequest</a>
+                  </li>
+                  <li>
+                    <a href="#tocScreatebracketorderrequest" class="toc-h2 toc-link" data-title="CreateBracketOrderRequest">CreateBracketOrderRequest</a>
+                  </li>
+                  <li>
+                    <a href="#tocSeditbracketorderrequest" class="toc-h2 toc-link" data-title="EditBracketOrderRequest">EditBracketOrderRequest</a>
+                  </li>
+                  <li>
+                    <a href="#tocSbatchdeleteorder" class="toc-h2 toc-link" data-title="BatchDeleteOrder">BatchDeleteOrder</a>
+                  </li>
+                  <li>
+                    <a href="#tocSdeleteorderrequest" class="toc-h2 toc-link" data-title="DeleteOrderRequest">DeleteOrderRequest</a>
+                  </li>
+                  <li>
+                    <a href="#tocScancelallfilterobject" class="toc-h2 toc-link" data-title="CancelAllFilterObject">CancelAllFilterObject</a>
+                  </li>
+                  <li>
+                    <a href="#tocSbatchdeleteordersrequest" class="toc-h2 toc-link" data-title="BatchDeleteOrdersRequest">BatchDeleteOrdersRequest</a>
+                  </li>
+                  <li>
+                    <a href="#tocSposition" class="toc-h2 toc-link" data-title="Position">Position</a>
+                  </li>
+                  <li>
+                    <a href="#tocSarrayofpositions" class="toc-h2 toc-link" data-title="ArrayOfPositions">ArrayOfPositions</a>
+                  </li>
+                  <li>
+                    <a href="#tocSfill" class="toc-h2 toc-link" data-title="Fill">Fill</a>
+                  </li>
+                  <li>
+                    <a href="#tocSarrayoffills" class="toc-h2 toc-link" data-title="ArrayOfFills">ArrayOfFills</a>
+                  </li>
+                  <li>
+                    <a href="#tocSfillmetadata" class="toc-h2 toc-link" data-title="FillMetaData">FillMetaData</a>
+                  </li>
+                  <li>
+                    <a href="#tocSorderleverage" class="toc-h2 toc-link" data-title="OrderLeverage">OrderLeverage</a>
+                  </li>
+                  <li>
+                    <a href="#tocSl2orderbook" class="toc-h2 toc-link" data-title="L2Orderbook">L2Orderbook</a>
+                  </li>
+                  <li>
+                    <a href="#tocStrades" class="toc-h2 toc-link" data-title="Trades">Trades</a>
+                  </li>
+                  <li>
+                    <a href="#tocSwallet" class="toc-h2 toc-link" data-title="Wallet">Wallet</a>
+                  </li>
+                  <li>
+                    <a href="#tocSwalletpayload" class="toc-h2 toc-link" data-title="WalletPayload">WalletPayload</a>
+                  </li>
+                  <li>
+                    <a href="#tocSwalletmetadata" class="toc-h2 toc-link" data-title="WalletMetaData">WalletMetaData</a>
+                  </li>
+                  <li>
+                    <a href="#tocSarrayofwallets" class="toc-h2 toc-link" data-title="ArrayOfWallets">ArrayOfWallets</a>
+                  </li>
+                  <li>
+                    <a href="#tocSassettransfersubaccountreq" class="toc-h2 toc-link" data-title="AssetTransferSubaccountReq">AssetTransferSubaccountReq</a>
+                  </li>
+                  <li>
+                    <a href="#tocSsubaccounttransferhistory" class="toc-h2 toc-link" data-title="SubaccountTransferHistory">SubaccountTransferHistory</a>
+                  </li>
+                  <li>
+                    <a href="#tocStransactiontypes" class="toc-h2 toc-link" data-title="TransactionTypes">TransactionTypes</a>
+                  </li>
+                  <li>
+                    <a href="#tocStransaction" class="toc-h2 toc-link" data-title="Transaction">Transaction</a>
+                  </li>
+                  <li>
+                    <a href="#tocSarrayoftransactions" class="toc-h2 toc-link" data-title="ArrayOfTransactions">ArrayOfTransactions</a>
+                  </li>
+                  <li>
+                    <a href="#tocSsubaccounttransferlog" class="toc-h2 toc-link" data-title="SubaccountTransferLog">SubaccountTransferLog</a>
+                  </li>
+                  <li>
+                    <a href="#tocSarrayofsubaccounttransferlog" class="toc-h2 toc-link" data-title="ArrayOfSubaccountTransferLog">ArrayOfSubaccountTransferLog</a>
+                  </li>
+                  <li>
+                    <a href="#tocSgreeks" class="toc-h2 toc-link" data-title="greeks">greeks</a>
+                  </li>
+                  <li>
+                    <a href="#tocSprice_band" class="toc-h2 toc-link" data-title="price_band">price_band</a>
+                  </li>
+                  <li>
+                    <a href="#tocSquotes" class="toc-h2 toc-link" data-title="quotes">quotes</a>
+                  </li>
+                  <li>
+                    <a href="#tocSticker" class="toc-h2 toc-link" data-title="Ticker">Ticker</a>
+                  </li>
+                  <li>
+                    <a href="#tocSarrayoftickers" class="toc-h2 toc-link" data-title="ArrayOfTickers">ArrayOfTickers</a>
+                  </li>
+                  <li>
+                    <a href="#tocSpaginationmeta" class="toc-h2 toc-link" data-title="PaginationMeta">PaginationMeta</a>
+                  </li>
+                  <li>
+                    <a href="#tocSohlcdata" class="toc-h2 toc-link" data-title="OHLCData">OHLCData</a>
+                  </li>
+                  <li>
+                    <a href="#tocSarrayofohlcdata" class="toc-h2 toc-link" data-title="ArrayOfOHLCData">ArrayOfOHLCData</a>
+                  </li>
+                  <li>
+                    <a href="#tocSsparklinedata" class="toc-h2 toc-link" data-title="SparklineData">SparklineData</a>
+                  </li>
+                  <li>
+                    <a href="#tocSstats" class="toc-h2 toc-link" data-title="Stats">Stats</a>
+                  </li>
+                  <li>
+                    <a href="#tocSmmpconfigupdaterequest" class="toc-h2 toc-link" data-title="MMPConfigUpdateRequest">MMPConfigUpdateRequest</a>
+                  </li>
+                  <li>
+                    <a href="#tocSmmpresetrequest" class="toc-h2 toc-link" data-title="MMPResetRequest">MMPResetRequest</a>
+                  </li>
+                  <li>
+                    <a href="#tocSchangemarginmoderequest" class="toc-h2 toc-link" data-title="ChangeMarginModeRequest">ChangeMarginModeRequest</a>
+                  </li>
+                  <li>
+                    <a href="#tocSuserpreference" class="toc-h2 toc-link" data-title="UserPreference">UserPreference</a>
+                  </li>
+                  <li>
+                    <a href="#tocSedituserpreference" class="toc-h2 toc-link" data-title="EditUserPreference">EditUserPreference</a>
+                  </li>
+                  <li>
+                    <a href="#tocSuser" class="toc-h2 toc-link" data-title="User">User</a>
+                  </li>
+                  <li>
+                    <a href="#tocSchangemarginmoderesponse" class="toc-h2 toc-link" data-title="ChangeMarginModeResponse">ChangeMarginModeResponse</a>
+                  </li>
+                  <li>
+                    <a href="#tocScreateheartbeat" class="toc-h2 toc-link" data-title="CreateHeartbeat">CreateHeartbeat</a>
+                  </li>
+                  <li>
+                    <a href="#tocSheartbeatconfig" class="toc-h2 toc-link" data-title="HeartbeatConfig">HeartbeatConfig</a>
+                  </li>
+                  <li>
+                    <a href="#tocSheartbeatresponse" class="toc-h2 toc-link" data-title="HeartbeatResponse">HeartbeatResponse</a>
+                  </li>
+                  <li>
+                    <a href="#tocSheartbeatack" class="toc-h2 toc-link" data-title="HeartbeatAck">HeartbeatAck</a>
+                  </li>
+                  <li>
+                    <a href="#tocSheartbeatackresponse" class="toc-h2 toc-link" data-title="HeartbeatAckResponse">HeartbeatAckResponse</a>
+                  </li>
+                  <li>
+                    <a href="#tocSarrayofheartbeats" class="toc-h2 toc-link" data-title="ArrayOfHeartbeats">ArrayOfHeartbeats</a>
+                  </li>
+                  <li>
+                    <a href="#tocSheartbeat" class="toc-h2 toc-link" data-title="Heartbeat">Heartbeat</a>
+                  </li>
+                  <li>
+                    <a href="#tocSarrayofsubaccouns" class="toc-h2 toc-link" data-title="ArrayOfSubaccouns">ArrayOfSubaccouns</a>
+                  </li>
+                  <li>
+                    <a href="#tocSratelimitquotaresponse" class="toc-h2 toc-link" data-title="RateLimitQuotaResponse">RateLimitQuotaResponse</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#deadman-switch" class="toc-h1 toc-link" data-title="Deadman Switch">Deadman Switch</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#overview" class="toc-h2 toc-link" data-title="Overview">Overview</a>
+                  </li>
+                  <li>
+                    <a href="#authentication" class="toc-h2 toc-link" data-title="Authentication">Authentication</a>
+                  </li>
+                  <li>
+                    <a href="#heartbeat-management" class="toc-h2 toc-link" data-title="Heartbeat Management">Heartbeat Management</a>
+                  </li>
+                  <li>
+                    <a href="#implementation-guidelines" class="toc-h2 toc-link" data-title="Implementation Guidelines">Implementation Guidelines</a>
+                  </li>
+                  <li>
+                    <a href="#error-codes" class="toc-h2 toc-link" data-title="Error Codes">Error Codes</a>
+                  </li>
+                  <li>
+                    <a href="#security-considerations" class="toc-h2 toc-link" data-title="Security Considerations">Security Considerations</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#place-order-errors" class="toc-h1 toc-link" data-title="Place order errors">Place order errors</a>
+          </li>
+          <li>
+            <a href="#errors" class="toc-h1 toc-link" data-title="Errors">Errors</a>
+          </li>
+          <li>
+            <a href="#rest-clients" class="toc-h1 toc-link" data-title="Rest Clients">Rest Clients</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#ccxt" class="toc-h2 toc-link" data-title="CCXT">CCXT</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#websocket-feed" class="toc-h1 toc-link" data-title="Websocket Feed">Websocket Feed</a>
+          </li>
+          <li>
+            <a href="#subscribing-to-channels" class="toc-h1 toc-link" data-title="Subscribing to Channels">Subscribing to Channels</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#subscribe" class="toc-h2 toc-link" data-title="Subscribe">Subscribe</a>
+                  </li>
+                  <li>
+                    <a href="#unsubscribe" class="toc-h2 toc-link" data-title="Unsubscribe">Unsubscribe</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#authenticating" class="toc-h1 toc-link" data-title="Authenticating">Authenticating</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#current-method" class="toc-h2 toc-link" data-title="Current method">Current method</a>
+                  </li>
+                  <li>
+                    <a href="#old-method" class="toc-h2 toc-link" data-title="Old method">Old method</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#sample-python-code" class="toc-h1 toc-link" data-title="Sample Python Code">Sample Python Code</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#public-channels" class="toc-h2 toc-link" data-title="Public Channels">Public Channels</a>
+                  </li>
+                  <li>
+                    <a href="#private-channels" class="toc-h2 toc-link" data-title="Private Channels">Private Channels</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#detecting-connection-drops" class="toc-h1 toc-link" data-title="Detecting Connection Drops">Detecting Connection Drops</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#heartbeat-recommended" class="toc-h2 toc-link" data-title="Heartbeat (Recommended)">Heartbeat (Recommended)</a>
+                  </li>
+                  <li>
+                    <a href="#ping-pong" class="toc-h2 toc-link" data-title="Ping/Pong">Ping/Pong</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#public-channels-2" class="toc-h1 toc-link" data-title="Public Channels">Public Channels</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#ticker" class="toc-h2 toc-link" data-title="ticker">ticker</a>
+                  </li>
+                  <li>
+                    <a href="#ob_l1" class="toc-h2 toc-link" data-title="ob_l1">ob_l1</a>
+                  </li>
+                  <li>
+                    <a href="#ob_l2" class="toc-h2 toc-link" data-title="ob_l2">ob_l2</a>
+                  </li>
+                  <li>
+                    <a href="#ob_updates" class="toc-h2 toc-link" data-title="ob_updates">ob_updates</a>
+                  </li>
+                  <li>
+                    <a href="#trades" class="toc-h2 toc-link" data-title="trades">trades</a>
+                  </li>
+                  <li>
+                    <a href="#mark_price" class="toc-h2 toc-link" data-title="mark_price">mark_price</a>
+                  </li>
+                  <li>
+                    <a href="#candlesticks" class="toc-h2 toc-link" data-title="candlesticks">candlesticks</a>
+                  </li>
+                  <li>
+                    <a href="#spot_price" class="toc-h2 toc-link" data-title="spot_price">spot_price</a>
+                  </li>
+                  <li>
+                    <a href="#spot_30mtwap_price" class="toc-h2 toc-link" data-title="spot_30mtwap_price">spot_30mtwap_price</a>
+                  </li>
+                  <li>
+                    <a href="#funding_rate" class="toc-h2 toc-link" data-title="funding_rate">funding_rate</a>
+                  </li>
+                  <li>
+                    <a href="#product_updates" class="toc-h2 toc-link" data-title="product_updates">product_updates</a>
+                  </li>
+                  <li>
+                    <a href="#system_status" class="toc-h2 toc-link" data-title="system_status">system_status</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#private-channels-2" class="toc-h1 toc-link" data-title="Private Channels">Private Channels</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#margins" class="toc-h2 toc-link" data-title="Margins">Margins</a>
+                  </li>
+                  <li>
+                    <a href="#positions" class="toc-h2 toc-link" data-title="Positions">Positions</a>
+                  </li>
+                  <li>
+                    <a href="#orders" class="toc-h2 toc-link" data-title="Orders">Orders</a>
+                  </li>
+                  <li>
+                    <a href="#usertrades" class="toc-h2 toc-link" data-title="UserTrades">UserTrades</a>
+                  </li>
+                  <li>
+                    <a href="#v2-user_trades" class="toc-h2 toc-link" data-title="v2/user_trades">v2/user_trades</a>
+                  </li>
+                  <li>
+                    <a href="#portfoliomargins" class="toc-h2 toc-link" data-title="PortfolioMargins">PortfolioMargins</a>
+                  </li>
+                  <li>
+                    <a href="#mmp-trigger" class="toc-h2 toc-link" data-title="MMP Trigger">MMP Trigger</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#changelog" class="toc-h1 toc-link" data-title="Changelog">Changelog</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#17-04-26" class="toc-h2 toc-link" data-title="17.04.26">17.04.26</a>
+                  </li>
+                  <li>
+                    <a href="#15-04-26" class="toc-h2 toc-link" data-title="15.04.26">15.04.26</a>
+                  </li>
+                  <li>
+                    <a href="#13-01-26" class="toc-h2 toc-link" data-title="13.01.26">13.01.26</a>
+                  </li>
+                  <li>
+                    <a href="#11-12-25" class="toc-h2 toc-link" data-title="11.12.25">11.12.25</a>
+                  </li>
+                  <li>
+                    <a href="#08-10-25" class="toc-h2 toc-link" data-title="08.10.25">08.10.25</a>
+                  </li>
+                  <li>
+                    <a href="#01-06-25" class="toc-h2 toc-link" data-title="01.06.25">01.06.25</a>
+                  </li>
+                  <li>
+                    <a href="#21-03-25" class="toc-h2 toc-link" data-title="21.03.25">21.03.25</a>
+                  </li>
+                  <li>
+                    <a href="#20-02-25" class="toc-h2 toc-link" data-title="20.02.25">20.02.25</a>
+                  </li>
+                  <li>
+                    <a href="#18-10-2024" class="toc-h2 toc-link" data-title="18.10.2024">18.10.2024</a>
+                  </li>
+                  <li>
+                    <a href="#01-05-2024" class="toc-h2 toc-link" data-title="01.05.2024">01.05.2024</a>
+                  </li>
+                  <li>
+                    <a href="#v2-rest-api" class="toc-h2 toc-link" data-title="V2 Rest Api">V2 Rest Api</a>
+                  </li>
+                  <li>
+                    <a href="#new-socket-channels" class="toc-h2 toc-link" data-title="New Socket Channels">New Socket Channels</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#security" class="toc-h1 toc-link" data-title="Security">Security</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#targets-in-scope" class="toc-h2 toc-link" data-title="Targets In scope">Targets In scope</a>
+                  </li>
+                  <li>
+                    <a href="#how-to-access" class="toc-h2 toc-link" data-title="How to access">How to access</a>
+                  </li>
+                  <li>
+                    <a href="#reward-range" class="toc-h2 toc-link" data-title="Reward range">Reward range</a>
+                  </li>
+                  <li>
+                    <a href="#rules-of-engagement" class="toc-h2 toc-link" data-title="Rules of engagement">Rules of engagement</a>
+                  </li>
+                  <li>
+                    <a href="#rules-of-reporting" class="toc-h2 toc-link" data-title="Rules of reporting">Rules of reporting</a>
+                  </li>
+                  <li>
+                    <a href="#recommended-reporting-format" class="toc-h2 toc-link" data-title="Recommended Reporting format">Recommended Reporting format</a>
+                  </li>
+                  <li>
+                    <a href="#ineligible-issues" class="toc-h2 toc-link" data-title="Ineligible issues">Ineligible issues</a>
+                  </li>
+              </ul>
+          </li>
+      </ul>
+        <ul class="toc-footer">
+        </ul>
+    </div>
+    <div class="page-wrapper">
+      <div class="dark-box"></div>
+      <div class="content">
+        <h1 id='introduction'>Introduction</h1>
+<p>Welcome to the Delta Exchange API! You can use this API to place orders on Delta Exchange and listen to market feed.</p>
+
+<p>We have language bindings in Shell, Python, Ruby and Nodejs! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
+
+<blockquote>
+<p>Scroll down for code samples, example requests and responses. Select a language for code samples from the tabs above or the mobile navigation menu.</p>
+</blockquote>
+
+<h1 id='general-information'>General Information</h1><h2 id='definitions'>Definitions</h2>
+<p><strong>Assets:</strong> are cryptocurrencies or fiat currencies. Each asset has a 3/4 letter code (e.g. BTC, USDC). A derivative contract on Delta Exchange will entail multiple assets, namely:</p>
+
+<ul>
+<li><p><strong>Underlying Asset:</strong> This is the asset over which a futures or perpetual contract is defined. For e.g. the underlying asset of the BTCUSD perpetual contract is BTC. </p></li>
+<li><p><strong>Quoting Asset:</strong> The asset in which price of the quoting is called the quoting asset. For e.g. the BTCUSD contract is quoted in USD. Therefore, the quoting asset of the contract is USD.</p></li>
+<li><p><strong>Settling Asset:</strong> The asset in which the margin and Profit/ Loss of a contract is denominated. For e.g. the BTCUSD contract is margined and settled in USD. Therefore, the settling asset of the contract is USD.</p></li>
+</ul>
+
+<p><strong>Products</strong>: are the derivative contracts listed on Delta Exchange. Each contract can be referred by either its Product ID (e.g. 27 is the Product ID of BTCUSD contract) or Symbol (BTCUSD is the symbol for BTCUSD contract). It is worth noting that Orders, Orderbook APIs expect Product IDs. 
+e.g.</p>
+
+<table><thead>
+<tr>
+<th>product_id</th>
+<th>symbol</th>
+<th>product_type</th>
+<th>description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>27</td>
+<td>BTCUSD</td>
+<td>perpetual_futures</td>
+<td>Bitcoin Perpetual futures margined and settled in INR</td>
+</tr>
+<tr>
+<td>3136</td>
+<td>ETHUSD</td>
+<td>perpetual_futures</td>
+<td>Ethereum perpetual futures margined and settled in INR</td>
+</tr>
+<tr>
+<td>2000</td>
+<td>P-BTC-38100-230124</td>
+<td>put_options</td>
+<td>BTC put option strike price $38100 and expiring on 23/01/2024</td>
+</tr>
+<tr>
+<td>5000</td>
+<td>C-BTC-55800-170224</td>
+<td>call_options</td>
+<td>BTC call option strike price $55800 and expiring on 17/02/2024</td>
+</tr>
+</tbody></table>
+<h2 id='symbology'>Symbology</h2>
+<p><strong>Contract symbol:</strong> has the following format</p>
+
+<p>Underlying Asset| Quoting Asset|_|Matruity Date (optional, applicable only for futures contracts)</p>
+
+<p>e.g. BTCUSD, ETHUSD</p>
+
+<p>For Options symbol:<br>
+    Option Type |-| Underlying Asset |-| Price Strikes |-| Expiry Date in ddMMYY<br>
+    e.g. C-BTC-90000-310125: C (Call Option) BTC (Bitcoin) 90000 strike price expiring on 31st Jan 2025</p>
+
+<p><strong>Mark Price:</strong> Each contract has a unique <a href="https://www.delta.exchange/user-guide/">Mark Price</a>  which can be referred to by: <strong>MARK: Contract_Symbol (MARK:BTCUSD)</strong> </p>
+
+<p><strong>Index Price:</strong> The prices of the underlying assets for the contracts listed on Delta Exchange are obtained from various spot exchanges, and are computed by averaging prices from multiple exchanges. Details of all the indices are available on this <a href="https://www.delta.exchange/indices/">page</a>.</p>
+
+<p>For a given Underlying Asset/ Quoting Asset pair, the Index price symbol is: <strong><em>.DE|Underlying Asset|Quoting Asset|</em></strong> 
+e.g. <strong>.DEBNBXBT</strong>
+It is important to note that the BTCUSD Index price doesn&#39;t follow this convention as its symbol is <strong>.DEXBTUSD</strong>.</p>
+<h2 id='pagination'>Pagination</h2>
+<p>Pagination allows to fetch data page-wise. We use cursor based pagination where each response metadata contains a before and after cursor. The cursor needs to passed on with the next request to paginate over the result. Please note that the cursors are updated with each new page.</p>
+
+<p>Pagination can be called in following APIs</p>
+
+<table><thead>
+<tr>
+<th>API</th>
+<th>End point</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Products</td>
+<td>/v2/products</td>
+</tr>
+<tr>
+<td>Orders</td>
+<td>/v2/orders</td>
+</tr>
+<tr>
+<td>Orders History</td>
+<td>/v2/orders/history</td>
+</tr>
+<tr>
+<td>Fills</td>
+<td>/v2/fills</td>
+</tr>
+<tr>
+<td>Wallet transactions</td>
+<td>/v2/wallet/transactions</td>
+</tr>
+</tbody></table>
+
+<p><strong>Pagination parameters</strong></p>
+
+<ul>
+<li>after 
+
+<ul>
+<li>after cursor to fetch the next page</li>
+</ul></li>
+<li>before 
+
+<ul>
+<li>before cursor to fetch the previous page</li>
+</ul></li>
+<li>page_size
+
+<ul>
+<li>page size for pagination</li>
+</ul></li>
+</ul>
+
+<p>In API response, meta data will contain the cursors as show below</p>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="s2">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"after"</span><span class="p">:</span><span class="w"> </span><span class="s2">"an_arbitary_string"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"before"</span><span class="p">:</span><span class="w"> </span><span class="s2">"another_arbitary_string"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>Example</strong></p>
+
+<p>https://api.india.delta.exchange/v2/products?page_size=30</p>
+
+<p>https://api.india.delta.exchange/v2/products?page_size=30&amp;after=after_cursor_from_last_request</p>
+<h2 id='data-centers'>Data Centers</h2>
+<p>Delta Exchange data centers are in <strong>AWS Tokyo</strong></p>
+
+<h1 id='authentication'>Authentication</h1>
+
+<p>Api endpoints that place orders or fetch account related information needs to authenticated using api key and api secret.</p>
+
+<h2 id='common-errors'>Common Errors</h2><h3 id='signatureexpired-error'>SignatureExpired Error</h3>
+<ul>
+<li><code>{ &quot;error&quot;: &quot;SignatureExpired&quot;, &quot;message&quot;: &quot;your signature has expired&quot; }</code></li>
+</ul>
+
+<p><strong>Explanation:</strong>  This error occurs when the timestamp used to generate your API request signature is more than <strong>5 seconds</strong> old by the time it reaches Delta Exchange servers. The platform enforces this time window to prevent replay attacks. You can check server time and request time in the api error response too.</p>
+<h3 id='troubleshooting'>🔧 Troubleshooting</h3>
+<p><strong>1. Sync Your System Clock</strong></p>
+
+<ul>
+<li>Ensure your system time is accurate using NTP (Network Time Protocol).
+
+<ul>
+<li><strong>Linux/macOS:</strong> <code>sudo ntpdate pool.ntp.org</code></li>
+<li><strong>Windows:</strong> Make sure the <em>Windows Time</em> service is running and properly synced.</li>
+</ul></li>
+<li>Enable automatic time synchronization in your system settings to prevent future drifts.</li>
+</ul>
+
+<p><strong>2. Check Network Latency</strong></p>
+
+<ul>
+<li>Check for any network latency on your side.</li>
+<li>Use a stable and high-speed internet connection.</li>
+</ul>
+
+<p><strong>3. Verify Timestamp Generation</strong></p>
+
+<ul>
+<li>Use Unix timestamp format (seconds since epoch).</li>
+<li>Don&#39;t reuse stale timestamps; update the timestamp before every request.</li>
+<li>Ensure the timestamp used in the signature matches the one sent in the request.</li>
+<li>Refer to the sample code block on the right.</li>
+</ul>
+<pre class="highlight plaintext"><code># python code to generate signature
+timestamp = str(int(time.time()))
+signature_data = method + timestamp + path + query_string + payload
+signature = generate_signature(api_secret, signature_data)
+</code></pre><h3 id='invalidapikey-error'>InvalidApiKey Error</h3>
+<ul>
+<li><code>{ &quot;error&quot;: &quot;InvalidApiKey&quot;, &quot;message&quot;: &quot;Api Key not found&quot; }</code></li>
+</ul>
+
+<p><strong>Explanation:</strong>  The API key in your request doesn&#39;t exist or is invalid. This can happen due to using keys from the wrong environment or deleted keys. </p>
+<h3 id='troubleshooting-2'>🔧 Troubleshooting</h3>
+<p><strong>1. Verify the Correct Environment</strong></p>
+
+<ul>
+<li>API keys created at <a href="https://www.delta.exchange">Delta India</a> account must be used only with production apis.(prod api - <a href="https://api.india.delta.exchange">https://api.india.delta.exchange</a>)</li>
+<li>API keys created at <a href="https://demo.delta.exchange">Demo</a> account must be used only with testnet apis.(testnet api - <a href="https://cdn-ind.testnet.deltaex.org">https://cdn-ind.testnet.deltaex.org</a>)</li>
+<li>Please not that the api url <a href="https://api.delta.exchange">https://api.delta.exchange</a> belongs to Delta Global and it can not used here. </li>
+</ul>
+
+<p><strong>2. Check API Key Validity</strong></p>
+
+<ul>
+<li>Log into Delta Exchange and confirm the key exists and is active.<br></li>
+<li>Check for any typos in the key too.</li>
+</ul>
+<h3 id='unauthorizedapiaccess-error'>UnauthorizedApiAccess Error</h3>
+<ul>
+<li><code>{ &quot;error&quot;: &quot;UnauthorizedApiAccess&quot;, &quot;message&quot;: &quot;Api Key not authorised to access this endpoint&quot; }</code></li>
+</ul>
+
+<p><strong>Explanation:</strong>  Your API key doesn&#39;t have permission to access this endpoint. Delta Exchange allows permission-based control for each key. There are two permissions given 1. Read Data ✅ 2. Trading ✅</p>
+<h3 id='troubleshooting-3'>🔧 Troubleshooting</h3>
+<p><strong>1. Check API Key Permissions</strong></p>
+
+<ul>
+<li>Go to API Management on Delta Exchange.<br></li>
+<li>Verify respective permissions: 1. Read Data 2. Trading, are enabled ✅ or not.</li>
+<li>If required, create a new api key with the right permissions enabled ✅.</li>
+</ul>
+
+<p><strong>2. Verify Endpoint Requirements</strong></p>
+
+<ul>
+<li>Market data: requires Read Data permissions only. </li>
+<li>Orders, Positions, Wallets: requires Trading permission.</li>
+</ul>
+
+<p><strong>3. Consider Security Best Practices</strong></p>
+
+<ul>
+<li>Grant only necessary permissions.<br></li>
+<li>Use separate keys for different use-cases.</li>
+</ul>
+<h3 id='ip-not-whitelisted-error'>IP Not Whitelisted Error</h3>
+<ul>
+<li><code>{ &quot;success&quot;: false, &quot;error&quot;: { &quot;code&quot;: &quot;ip_not_whitelisted_for_api_key&quot; } }</code></li>
+</ul>
+
+<p><strong>Explanation:</strong>  This occurs when the request originates from an IP not allowed for the given API key. Delta Exchange enforces IP whitelisting as a security measure. Consider whitelisting he IP returned into the api error response.</p>
+<h3 id='troubleshooting-4'>🔧 Troubleshooting</h3>
+<p><strong>1. Update IP Whitelist</strong></p>
+
+<ul>
+<li>Log into Delta Exchange &gt; API Management<br></li>
+<li>Add your IP to the API key’s whitelist. The IP can be found into the api error response. </li>
+<li>You can whitelist a list of IPs too. Enter them as comma separated list.</li>
+<li>Delta support both IPv4 and IPv6 formats for whitelisting.</li>
+</ul>
+
+<p><strong>2. Consider Network Behavior</strong></p>
+
+<ul>
+<li>VPNs or ISPs with dynamic IPs may require frequent updates.<br></li>
+<li>Consider cloud hosted machine with static IP for production to avoid whitelisting repeatedly.</li>
+</ul>
+<h3 id='request-forbidden-error'>Request Forbidden Error</h3>
+<ul>
+<li><code>{ &quot;error&quot;: &quot;Forbidden&quot;, &quot;message&quot;: &quot;Request blocked by CDN&quot; }</code></li>
+</ul>
+
+<p><strong>Explanation:</strong>  Your request was blocked before reaching the Delta API gateway. This usually happens when required headers are missing (e.g., User-Agent), or when requests originate from environments where the IP is hidden or blocked by the CDN.</p>
+<h3 id='troubleshooting-5'>🔧 Troubleshooting</h3>
+<p><strong>1. Add a User-Agent Manually</strong></p>
+
+<ul>
+<li>Some HTTP clients (e.g., in certain programming languages) do not send a User-Agent header by default.</li>
+<li>Set a valid User-Agent string in your request to avoid being rejected.</li>
+</ul>
+
+<p><strong>2. Trace Request Headers</strong></p>
+
+<ul>
+<li>Inspect the request/response headers using tools like curl -v, Postman, or your language’s HTTP client debugger.</li>
+<li>Check if required headers are present and correctly passed through.</li>
+</ul>
+
+<p><strong>3. Verify Request IP</strong></p>
+
+<ul>
+<li>Some hosted environments or proxies mask the client IP.</li>
+<li>Confirm that the request includes a valid IP address visible to the CDN. If the IP is hidden or blocked, the request will be rejected.</li>
+</ul>
+<h3 id='signature-mismatch-error'>Signature Mismatch Error</h3>
+<ul>
+<li><code>{ &quot;success&quot;: false, &quot;error&quot;: { &quot;code&quot;: &quot;Signature Mismatch&quot; } }</code></li>
+</ul>
+
+<p><strong>Explanation:</strong>  This error occurs when the signature generated on your end does not match the one received by Delta Exchange. This can happen due to incorrect timestamp, payload, or method used in the signature generation.</p>
+<h3 id='troubleshooting-6'>🔧 Troubleshooting</h3>
+<p><strong>1. Verify Signature Generation</strong></p>
+
+<ul>
+<li>Ensure you are using the correct http method (GET/POST) and the same payload as in the request.</li>
+<li>Check that the timestamp used in the signature matches the one sent in the request.</li>
+<li>Ensure you are using the correct API secret for the signature generation.</li>
+<li>Make sure you are using the correct endpoint path and query parameters in the signature generation.</li>
+<li>Ensure that the payload is properly formatted and matches the request body.</li>
+<li>Check for any extra spaces or characters in the signature string.</li>
+<li>Refer to the sample code block (see <a href="/#signing-a-message">Signing a Message</a>).</li>
+</ul>
+
+<p>By following these troubleshooting steps, you can resolve common Delta Exchange API authentication and authorization issues. For persistent problems, contact Delta Exchange support.</p>
+
+<p>(Note - <strong>api key creation blocked - When user enters wrong otp/mfa code more than 5 times, Delta exchange blocks api key creation for next 30 mins. After then, users can try creating again.</strong>)</p>
+<h2 id='generating-an-api-key'>Generating an API Key</h2>
+
+<p>Before being able to sign any requests, you must create an API key via the Delta website. Upon creating a key you will receive api key and api secret, which you must remember and secure at your end. The Key and Secret will be randomly generated.</p>
+
+<p>You can create a new API key from here :
+<a href="https://www.delta.exchange/app/account/manageapikeys">https://www.delta.exchange/app/account/manageapikeys</a></p>
+
+<p>To create an API key with Trading permissions, whitelisted IP(s) must be provided. API requests using this API key will only succeed, if made from a machine with an IP address that was whitelisted. Multiple IPs can be whitelisted for a single API key. IP values can take IPv4 and IPv6. Whitelisted IPs can be changed and updated from the same page.</p>
+
+<p>Common issues:<br>
+1. Your machine is using IPv6 instead of IPv4 or vice-versa. Disable the one that isn’t whitelisted from your network settings or whitelist both.<br>
+2. Your ISP may automatically change the IP address at your home, office about once a week. Update your whitelisted IP in such case.<br>
+3. If you are using a Web Service/Cloud provider like AWS, assign a static public IPv4 address to your machine.  </p>
+
+<h2 id='api-key-permissions'>API Key Permissions</h2>
+
+<p>You can restrict the functionality of API keys. Before creating the key, you must choose what permissions you would like the key to have. The permissions are:</p>
+
+<ul>
+<li>Trading - Allow a key to have trading permissions. This includes placing new orders, cancelling orders, closing positions, changing margin &amp; leverage.</li>
+</ul>
+
+<h2 id='creating-a-request'>Creating a Request</h2>
+
+<p>All Authenticated requests must contain the following headers:</p>
+
+<p><strong>api-key</strong>: The api key as a string.</p>
+
+<p><strong>signature</strong>: The hex-encoded signature (see <a href="/#signing-a-message">Signing a Message</a>).</p>
+
+<p><strong>timestamp</strong>: A timestamp for your request.</p>
+
+<p><strong>User-Agent</strong>: Your programming language or library that you are using. e.g. &quot;python-3.10&quot; or &quot;java&quot;. This is fo

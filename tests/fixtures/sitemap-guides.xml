@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide</loc>
+				<priority>1</priority>
+				<lastmod>2025-01-03T10:14:23.916Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/derivatives-guide/options-guide</loc>
+				<priority>0.84</priority>
+				<lastmod>2025-01-03T10:17:20.012Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/derivatives-guide/options-guide/option-spreads</loc>
+				<priority>0.7</priority>
+				<lastmod>2025-01-03T10:17:20.012Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/derivatives-guide/options-guide/move</loc>
+				<priority>0.7</priority>
+				<lastmod>2024-08-30T09:01:31.196Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/derivatives-guide/options-guide/turbo-options</loc>
+				<priority>0.7</priority>
+				<lastmod>2025-01-03T10:19:32.283Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/derivatives-guide/untitled-1</loc>
+				<priority>0.84</priority>
+				<lastmod>2025-01-03T10:19:32.283Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/derivatives-guide/docs</loc>
+				<priority>0.84</priority>
+				<lastmod>2025-11-19T10:52:11.228Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/derivatives-guide/spread-contracts-guide</loc>
+				<priority>0.84</priority>
+				<lastmod>2025-01-03T10:21:36.095Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/derivatives-guide/interest-rate-swaps-guide</loc>
+				<priority>0.84</priority>
+				<lastmod>2022-09-03T07:09:44.000Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/derivatives-guide/interest-rate-swaps-guide/bitmex-funding-rate-swap</loc>
+				<priority>0.7</priority>
+				<lastmod>2022-09-03T07:10:19.000Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/derivatives-guide/interest-rate-swaps-guide/dai-savings-rate-swap</loc>
+				<priority>0.7</priority>
+				<lastmod>2022-09-03T07:10:32.000Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/derivatives-guide/defi-index</loc>
+				<priority>0.84</priority>
+				<lastmod>2022-09-03T06:40:35.000Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/market-makers-guide</loc>
+				<priority>1</priority>
+				<lastmod>2024-12-05T15:56:13.004Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/market-makers-guide/market-maker-protection</loc>
+				<priority>0.84</priority>
+				<lastmod>2024-12-05T15:59:30.977Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/trading-guide/trade-life-cycle</loc>
+				<priority>0.84</priority>
+				<lastmod>2025-01-03T10:31:13.109Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/trading-guide/fair-price-marking</loc>
+				<priority>0.84</priority>
+				<lastmod>2025-01-03T10:31:13.184Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/trading-guide/leverage</loc>
+				<priority>0.84</priority>
+				<lastmod>2025-01-03T10:32:24.863Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/trading-guide/profit-loss-math</loc>
+				<priority>0.84</priority>
+				<lastmod>2025-01-03T10:32:24.803Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/trading-guide/margin-explainer</loc>
+				<priority>0.84</priority>
+				<lastmod>2025-01-03T10:31:13.184Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/trading-guide/margin-explainer/margin-explainer</loc>
+				<priority>0.7</priority>
+				<lastmod>2024-11-21T08:47:21.722Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/trading-guide/margin-explainer/margin-explainer/liquidation</loc>
+				<priority>0.59</priority>
+				<lastmod>2024-11-21T09:19:17.660Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/trading-guide/margin-explainer/portfolio-margin</loc>
+				<priority>0.7</priority>
+				<lastmod>2025-11-28T09:47:10.537Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/trading-guide/margin-explainer/cross-margin</loc>
+				<priority>0.7</priority>
+				<lastmod>2026-03-03T07:56:53.303Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/trading-guide/order-types</loc>
+				<priority>0.84</priority>
+				<lastmod>2024-04-24T11:40:54.180Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/trading-guide/order-types/basket-orders</loc>
+				<priority>0.7</priority>
+				<lastmod>2025-04-14T07:12:56.715Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/trading-guide/deleveraging</loc>
+				<priority>0.84</priority>
+				<lastmod>2025-01-03T10:32:24.825Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/exchange-sop-and-policies/allowed-trading-bands</loc>
+				<priority>0.84</priority>
+				<lastmod>2025-01-03T10:32:24.863Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/exchange-sop-and-policies/market-disruption</loc>
+				<priority>0.84</priority>
+				<lastmod>2025-01-03T10:33:31.795Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/exchange-sop-and-policies/trade-annulment</loc>
+				<priority>0.84</priority>
+				<lastmod>2025-01-03T10:33:32.442Z</lastmod>
+</url>
+
+			<url>
+				<loc>https://guides.delta.exchange/delta-exchange-user-guide/exchange-sop-and-policies/special-events-handling</loc>
+				<priority>0.84</priority>
+				<lastmod>2025-01-03T10:33:32.442Z</lastmod>
+</url>
+
+
+</urlset>
