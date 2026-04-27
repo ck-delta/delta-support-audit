@@ -1,21 +1,18 @@
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const PROMPTS_DIR = join(__dirname, '..', '..', 'prompts');
+import { COMPARE_PROMPT, CONFLICT_PROMPT, COVERAGE_PROMPT } from '@/prompts/embedded';
 
 export type PromptName = 'compare' | 'conflict' | 'coverage';
 
-const cache = new Map<PromptName, string>();
+// Prompts are baked into the bundle via src/prompts/embedded.ts so they ship
+// in serverless deployments (Next.js's outputFileTracing doesn't pick up .md
+// files reliably). Edit the .md files and re-run `pnpm tsx src/scripts/embed-prompts.ts`.
+const PROMPTS: Record<PromptName, string> = {
+  compare: COMPARE_PROMPT,
+  conflict: CONFLICT_PROMPT,
+  coverage: COVERAGE_PROMPT,
+};
 
 export function loadPrompt(name: PromptName): string {
-  const cached = cache.get(name);
-  if (cached) return cached;
-  const path = join(PROMPTS_DIR, `${name}.md`);
-  const text = readFileSync(path, 'utf8');
-  cache.set(name, text);
-  return text;
+  return PROMPTS[name];
 }
 
 export function renderPrompt(template: string, vars: Record<string, string>): string {

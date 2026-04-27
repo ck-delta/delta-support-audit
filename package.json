@@ -6,6 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
+    "embed-prompts": "tsx src/scripts/embed-prompts.ts",
+    "prebuild": "tsx src/scripts/embed-prompts.ts",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
