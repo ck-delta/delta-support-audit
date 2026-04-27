@@ -6,7 +6,7 @@ Production system that audits delta.exchange's Freshdesk support center against 
 
 - Next.js 15 App Router · TypeScript strict · Node 20+
 - **LLM:** OpenRouter → `anthropic/claude-sonnet-4.6` (NOT direct Anthropic SDK)
-- **Embeddings:** Upstash Vector built-in embedding model (no separate provider)
+- **Embeddings:** Upstash Vector built-in embedding model (`BGE_LARGE_EN_V1_5`, 1024-dim, server-side; selected at index creation; no separate provider needed)
 - **State:** Upstash Redis (KV: hashes, run history, dedup) · Upstash Vector (chunks)
 - **Output:** Slack incoming webhook (P0 only) · Notion API (full rolling page)
 - **HTML parsing:** cheerio + per-source rules in `src/lib/crawl/normalize.ts`

@@ -52,11 +52,24 @@ export interface Issue {
   lastSeenAt: string;
 }
 
-export interface Chunk {
+export interface ChunkMetadata {
   source: Source;
-  url: string;
+  articleStableId: string;
+  articleTitle: string;
+  articleUrl: string;
   sectionHeading: string;
   chunkIndex: number;
+}
+
+export interface PreparedChunk {
+  id: string;
   text: string;
-  embedding?: number[];
+  metadata: ChunkMetadata;
+}
+
+export interface RetrievedChunk {
+  id: string;
+  score: number;
+  data: string;
+  metadata: ChunkMetadata;
 }

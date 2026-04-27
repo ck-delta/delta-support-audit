@@ -2,7 +2,14 @@
 
 Production system that audits Delta Exchange's Freshdesk support center against `guides.delta.exchange` and `docs.delta.exchange` (sources of truth) for factual contradictions and missing coverage. Runs daily on Vercel Cron, writes the full graded report to Notion, fires P0 issues to Slack.
 
-**Status:** M1 complete (crawl + content-hash). M2–M5 in progress.
+**Status:** M0–M2 complete. M3–M5 in progress.
+
+- M0 — discovery
+- M1 — crawl + content-hash (765 hashes in Upstash Redis)
+- M2 — embed + retrieve (613 SoT chunks in Upstash Vector, BGE-large-en-v1.5)
+- M3 — compare + grade (LLM audits, planned next)
+- M4 — output + deploy (Slack + Notion + Vercel cron)
+- M5 — first sweep + tune
 
 ## Quick start
 
@@ -59,7 +66,9 @@ Required env vars in `.env.local` (see `.env.local.example` for the full list):
 pnpm crawl                                    # all sources, dry run
 pnpm crawl --source=guides                    # one source
 pnpm crawl --source=docs --limit=10           # cap article count
-pnpm crawl --write                            # persist hashes to Redis
+pnpm crawl --write                            # persist hashes to Redis (M1)
+pnpm tsx src/scripts/embed-sot.ts             # embed SoT chunks → Upstash Vector (M2)
+pnpm tsx src/scripts/embed-sot.ts --sample-query="how is liquidation price calculated"
 pnpm test                                     # vitest
 pnpm typecheck                                # tsc --noEmit
 pnpm lint                                     # next lint
