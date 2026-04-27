@@ -1,0 +1,150 @@
+{
+  "metadata": {
+    "startedAt": "2026-04-27T13:18:19.209Z",
+    "completedAt": "2026-04-27T13:19:07.454Z",
+    "model": "anthropic/claude-sonnet-4.6",
+    "articlesChecked": 21,
+    "articlesChanged": 20,
+    "articlesAudited": 20,
+    "totalIssues": 7,
+    "newIssues": 0,
+    "stillOpenIssues": 0,
+    "resolvedIssues": 0,
+    "totalConflicts": 1,
+    "totalCoverageGaps": 0,
+    "promptTokens": 130067,
+    "completionTokens": 4924,
+    "costEstimateUsd": 0.46406099999999995,
+    "truncated": false,
+    "durationMs": 48245,
+    "errors": 0
+  },
+  "issuesBySeverity": {
+    "P0": [
+      {
+        "id": "783b4e877a294ee76d507b3ffff90e2992baa6dec65958ecea87ba2fb1f8a3ef",
+        "type": "contradiction",
+        "severity": "P0",
+        "supportUrl": "https://deltaexchange.freshdesk.com/support/solutions/articles/80001014618",
+        "sotUrl": "https://guides.delta.exchange/delta-exchange-user-guide/trading-guide/trade-life-cycle",
+        "supportQuote": "Users can only deposit USDT into their accounts.",
+        "sotQuote": "Delta Exchange has two funding currencies - BTC and USDT. This means that you can deposit either bitcoins or Tether (USDT) to your Delta wallet.",
+        "summary": "Support says only USDT deposits are accepted; SoT still lists BTC as a valid funding/deposit currency (SoT appears outdated — needs update)",
+        "confidence": 0.88,
+        "status": "new",
+        "firstSeenAt": "2026-04-27T13:18:19.209Z",
+        "lastSeenAt": "2026-04-27T13:18:19.209Z",
+        "suggestedOwner": "Docs"
+      },
+      {
+        "id": "3cead0ab3fa9adca50c12ebc9e5096e204e25d6697b93d70f8f05f905f67bb16",
+        "type": "contradiction",
+        "severity": "P0",
+        "supportUrl": "https://deltaexchange.freshdesk.com/support/solutions/articles/80001014611",
+        "sotUrl": "https://guides.delta.exchange/delta-exchange-user-guide/trading-guide/trade-life-cycle",
+        "supportQuote": "currently we only support USDT deposits over a limited number of networks.",
+        "sotQuote": "Delta Exchange has two funding currencies - BTC and USDT. This means that you can deposit either bitcoins or Tether (USDT) to your Delta wallet.",
+        "summary": "Support article states only USDT deposits are supported; SoT (Trade Life Cycle guide) still lists BTC as a valid deposit currency alongside USDT. (SoT appears outdated — needs update)",
+        "confidence": 0.88,
+        "status": "new",
+        "firstSeenAt": "2026-04-27T13:18:19.209Z",
+        "lastSeenAt": "2026-04-27T13:18:19.209Z",
+        "suggestedOwner": "Docs"
+      },
+      {
+        "id": "ae5244ccac05f7003941a5148ccf16c15ffb2e135d3a95ebac93671230242ddb",
+        "type": "contradiction",
+        "severity": "P0",
+        "supportUrl": "https://deltaexchange.freshdesk.com/support/solutions/articles/80001014604",
+        "sotUrl": "https://guides.delta.exchange/delta-exchange-user-guide/trading-guide/trade-life-cycle",
+        "supportQuote": "currently we only support Deposit and Withdrawal of the following currencies over a limited number of networks",
+        "sotQuote": "Delta Exchange has two funding currencies - BTC and USDT. This means that you can deposit either bitcoins or Tether (USDT) to your Delta wallet and withdraw only bitcoins or USDT from your Delta wallet.",
+        "summary": "Support article restricts deposits/withdrawals to a specific limited set of currencies (implying USDT-only or similar narrow list), while the SoT guides still describe BTC and USDT as the two supported funding currencies for deposit and withdrawal (SoT appears outdated — needs update).",
+        "confidence": 0.72,
+        "status": "new",
+        "firstSeenAt": "2026-04-27T13:18:19.209Z",
+        "lastSeenAt": "2026-04-27T13:18:19.209Z",
+        "suggestedOwner": "Docs"
+      },
+      {
+        "id": "1858fc4172ee8a7ad812371d94333d2528bb574c29c86c5ad63bd55a36902ca7",
+        "type": "contradiction",
+        "severity": "P0",
+        "supportUrl": "https://deltaexchange.freshdesk.com/support/solutions/articles/80001014610",
+        "sotUrl": "https://guides.delta.exchange/delta-exchange-user-guide/trading-guide/trade-life-cycle",
+        "supportQuote": "Please also ensure that you send only Bitcoin to your Delta Exchange deposit address. Litecoin, Bitcoin Cash and Tether networks accept Bitcoin addresses as valid.",
+        "sotQuote": "Delta Exchange has two funding currencies - BTC and USDT. This means that you can deposit either bitcoins or Tether (USDT) to your Delta wallet.",
+        "summary": "Support article implies only Bitcoin deposits are supported and warns against sending USDT, but SoT states both BTC and USDT are valid funding currencies that can be deposited (SoT appears outdated — needs update).",
+        "confidence": 0.72,
+        "status": "new",
+        "firstSeenAt": "2026-04-27T13:18:19.209Z",
+        "lastSeenAt": "2026-04-27T13:18:19.209Z",
+        "suggestedOwner": "Docs"
+      }
+    ],
+    "P1": [
+      {
+        "id": "c35552beda3bc6415a5f907496744dfdd1a835e0ec12d3adffb92df5e653da49",
+        "type": "contradiction",
+        "severity": "P1",
+        "supportUrl": "https://deltaexchange.freshdesk.com/support/solutions/articles/80001014518",
+        "sotUrl": "https://guides.delta.exchange/delta-exchange-user-guide/exchange-sop-and-policies/market-disruption",
+        "supportQuote": "Phase 3 - Post Only Mode ... This phase is generally active for 5 - 10 minutes before each planned maintenance.",
+        "sotQuote": "Step 1: Market is put into post-only mode. Traders are able to post and/ or cancel limit orders. However, at time time, orders are not matched.",
+        "summary": "Support article states Post Only Mode is active '5-10 minutes before each planned maintenance', but it is actually a post-maintenance resumption phase (not a pre-maintenance phase), as described in the SoT Trading Resumption Process.",
+        "confidence": 0.85,
+        "status": "new",
+        "firstSeenAt": "2026-04-27T13:18:19.209Z",
+        "lastSeenAt": "2026-04-27T13:18:19.209Z",
+        "suggestedOwner": "Support"
+      },
+      {
+        "id": "cb551adbdf4145e64fdbba244cc464d3a4fb7e4f6464dcfb5e14ce493e16e8be",
+        "type": "contradiction",
+        "severity": "P1",
+        "supportUrl": "https://deltaexchange.freshdesk.com/support/solutions/articles/80001014518",
+        "sotUrl": "https://guides.delta.exchange/delta-exchange-user-guide/exchange-sop-and-policies/market-disruption",
+        "supportQuote": "However, they cannot:\n1) Cancel/ Edit any open positions>",
+        "sotQuote": "Phase 1: Order book is put in cancel-only mode and no new orders are accepted. Thus, traders have the option to cancel any existing orders.",
+        "summary": "Support article says users cannot cancel/edit open positions in Phase 1 (Cancel Only Mode), but the SoT describes Phase 1 as allowing cancellation of existing orders with no mention of a position-editing restriction beyond new orders.",
+        "confidence": 0.75,
+        "status": "new",
+        "firstSeenAt": "2026-04-27T13:18:19.209Z",
+        "lastSeenAt": "2026-04-27T13:18:19.209Z",
+        "suggestedOwner": "Support"
+      },
+      {
+        "id": "032533e0b4e03f65a3d4f249304b3a343fefd72888ab619720f3e600990e54e0",
+        "type": "contradiction",
+        "severity": "P1",
+        "supportUrl": "https://deltaexchange.freshdesk.com/support/solutions/articles/80001014518",
+        "sotUrl": "https://docs.delta.exchange/#auction-started",
+        "supportQuote": "In this phase users can ... Add new orders, however, orders will not be executed as matching of orders is not initiated\nCancel/ Edit their open orders",
+        "sotQuote": "In post only mode, you can post new orders, cancel exisiting orders, add more margin to open positions. No matching happens in this mode.",
+        "summary": "Support article omits that users can also add more margin to open positions during Post Only Mode, which is explicitly listed as an allowed action in the docs SoT.",
+        "confidence": 0.72,
+        "status": "new",
+        "firstSeenAt": "2026-04-27T13:18:19.209Z",
+        "lastSeenAt": "2026-04-27T13:18:19.209Z",
+        "suggestedOwner": "Support"
+      }
+    ],
+    "P2": []
+  },
+  "conflicts": [
+    {
+      "id": "94d5b2938f901f22dab93ae1f534aaa8da570667ae9cdfba38ec6e8b74543d57",
+      "severity": "P1",
+      "guidesQuote": "Phase 1: Order book is put in cancel-only mode and no new orders are accepted. Thus, traders have the option to cancel any existing orders.\nPhase 2: Order book is completely frozen and, new order or cancellations are accepted and no matches occur.",
+      "guidesUrl": "https://guides.delta.exchange/delta-exchange-user-guide/exchange-sop-and-policies/market-disruption",
+      "docsQuote": "When markets are disrupted, orderbook enters into cancel only mode. You can refer to \"trading_status\" field in product info to determine this. In cancel only mode, you can only cancel your orders. No matching happens in this mode.",
+      "docsUrl": "https://docs.delta.exchange/#market-disruption",
+      "summary": "Guides describe two distinct pre-maintenance phases (cancel-only then fully frozen), while docs describe market disruption as a single cancel-only mode state with no mention of a subsequent fully-frozen phase.",
+      "confidence": 0.72,
+      "status": "new",
+      "firstSeenAt": "2026-04-27T13:18:19.209Z",
+      "lastSeenAt": "2026-04-27T13:18:19.209Z"
+    }
+  ],
+  "coverageGaps": []
+}

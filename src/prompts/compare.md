@@ -34,6 +34,22 @@ If you can't tell whether an SoT chunk is India-specific or global, default to f
 - Minor word choice ("crypto" vs "digital asset") unless it changes meaning.
 - Information present in support but absent in SoT (the SoT may simply not cover it; flag only the reverse).
 - Differences attributable to the India-vs-global split (see India scope rule above).
+- **Orthogonal facts about the same domain.** A contradiction requires that both quotes assert competing values for the SAME named property/parameter/restriction/rule. If support says "X is restricted per account" and SoT says "Y is restricted per account", that is NOT a contradiction even though both apply to accounts — they are talking about distinct restrictions that can coexist. Before flagging, identify the exact shared property (e.g. "leverage cap on BTC perpetuals", "withdrawal fee for ETH"). If you cannot name a single shared property that both quotes contradict on, do NOT flag.
+
+# Direction-of-fix rule (important)
+
+When you DO find a contradiction, the support article is NOT always the side that's wrong. The SoT (guides + docs) can also be stale. Use these signals to set `suggested_owner`:
+
+- **Set `suggested_owner: "Docs"` when SoT appears outdated.** Signals that SoT is stale:
+  - SoT mentions products/features that the support article explicitly says are deprecated, discontinued, or no longer supported (e.g. SoT says "BTC and USDT are funding currencies" but support says "only USDT is currently accepted").
+  - SoT lists assets/pairs/markets that the support article says are no longer available.
+  - The support article explicitly references the deprecation event (date, version, "no longer", "discontinued", "currently disabled").
+  - In this case, also append `(SoT appears outdated — needs update)` to the end of the `summary` field.
+- **Set `suggested_owner: "Support"` when the support article appears outdated.** Signals: support article mentions older versions, references behavior the SoT explicitly says changed, or describes a workflow the SoT says was simplified.
+- **Set `suggested_owner: "Engineering"` when the underlying system behavior itself is in question.** Signals: a hard system limit (max position size, rate limit) is described differently and the difference materially affects API behavior.
+- **Set `suggested_owner: "Product"`** only when the divergence reflects an unresolved policy question.
+
+Default to **Support** if you cannot identify which side is stale.
 
 # Suggested owner taxonomy
 
@@ -95,3 +111,47 @@ Default to **Support** if uncertain — most cases are stale support articles.
 ```
 
 If no contradictions found, set `"issues": []`. If guides and docs agree (or only one was retrieved), set `"conflicts": []`. Do not invent issues. Do not flag stylistic differences. If you are < 0.6 confidence, omit the issue entirely.
+
+# Few-shot examples
+
+These examples illustrate the rules above. Use them as guidance, not as a template to copy.
+
+## Example 1 — orthogonal facts about the same domain (DO NOT flag)
+
+Support quote: "Portfolio margin can be enabled only on a single coin per account/sub-account. Use sub-accounts to run portfolio margin on multiple coins."
+
+SoT quote: "Margin mode is an account level property. Therefore, for a given account/subaccount, you can select only one margin mode."
+
+These look related (both involve account-level restrictions on margin) but they assert DIFFERENT properties:
+- Support: "PM is restricted to one coin per account"
+- SoT: "Only one margin mode per account"
+
+Both can be true simultaneously. Neither contradicts the other. **Output: no issue.**
+
+## Example 2 — SoT-stale contradiction (DO flag, with `suggested_owner: "Docs"`)
+
+Support quote: "Users can only deposit USDT into their accounts. USDT deposits are supported through the following networks: BEP20, ERC20."
+
+SoT quote: "Delta Exchange has two funding currencies - BTC and USDT. This means that you can deposit either bitcoins or Tether (USDT) to your Delta wallet."
+
+The support article explicitly narrows to USDT-only. The SoT still mentions BTC. This is a real contradiction, but the SoT is the side with stale information. **Output:**
+```json
+{
+  "type": "contradiction",
+  "severity": "P0",
+  "support_quote": "Users can only deposit USDT into their accounts...",
+  "sot_quote": "Delta Exchange has two funding currencies - BTC and USDT...",
+  "sot_url": "<...>",
+  "summary": "Support says only USDT deposits are accepted; SoT still lists BTC as a funding currency (SoT appears outdated — needs update)",
+  "suggested_owner": "Docs",
+  "confidence": 0.85
+}
+```
+
+## Example 3 — concrete procedural mismatch (DO flag, default to `suggested_owner: "Support"`)
+
+Support quote: "During Phase 1 (Cancel Only Mode), users cannot cancel/edit any open positions."
+
+SoT quote: "Phase 1: Order book is put in cancel-only mode and no new orders are accepted. Thus, traders have the option to cancel any existing orders."
+
+Both quotes are talking about Phase 1 behavior on the SAME named property (what users can do during Phase 1). They directly contradict each other on cancellation. **Output: P1 issue, `suggested_owner: "Support"`** (the support article is wrong — Phase 1 is literally named "Cancel Only" because cancellation IS allowed).

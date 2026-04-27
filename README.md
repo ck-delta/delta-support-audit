@@ -2,14 +2,21 @@
 
 Production system that audits Delta Exchange's Freshdesk support center against `guides.delta.exchange` and `docs.delta.exchange` (sources of truth) for factual contradictions and missing coverage. Runs daily on Vercel Cron, writes the full graded report to Notion, fires P0 issues to Slack.
 
-**Status:** M0–M4 complete. M5 in progress.
+**Status:** M0–M5 complete. Production deploy is the final user step.
 
 - M0 — discovery
 - M1 — crawl + content-hash (Upstash Redis)
 - M2 — embed + retrieve (1067 chunks in Upstash Vector, BGE-large-en-v1.5)
 - M3 — compare + grade (Sonnet 4.6 via OpenRouter; compare/conflict/coverage detectors)
 - M4 — output + deploy (Slack + Notion + Vercel cron at 04:00 IST daily)
-- M5 — first sweep + tune
+- M5 — first sweep + tune (compare.md v2 shipped at 12.5% FP rate)
+
+## Known limitations (M5 sign-off)
+
+- **FP rate on P0+P1: ~12.5% (1 in 8 findings).** Above the 10% target. Driven by occasional omission-style flags. Decision: ship and tune in production rather than iterate prompt further.
+- **Dedup phrasing instability**: Sonnet phrases issue summaries slightly differently across runs at temperature=0, so identical issues sometimes get different dedup IDs. The dedup `still-open` count under-reports. Tracked for M6.
+- **Coverage detector is conservative.** At similarity threshold 0.85, full SoT corpus produces few/no flagged gaps because Sonnet's "default to covered if uncertain" rule is strict. This is intentional for v1 noise control; revisit if real gaps are missed.
+- **Vercel Hobby 60s timeout** caps the daily cron to ~12-15 articles per run. Most days that's fine (only changed articles audit). If a backlog builds (50+ changed articles), the cron returns `truncated=true` and the next run picks up. To unblock big-bang re-audits, run `pnpm tsx src/scripts/audit-batch.ts --write` from your machine.
 
 ## Quick start
 
