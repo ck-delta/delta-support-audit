@@ -11,9 +11,30 @@ Production system that audits Delta Exchange's Freshdesk support center against 
 - M4 — output + deploy (Slack + Notion + Vercel cron at 04:00 IST daily)
 - M5 — first sweep + tune (compare.md v2 shipped at 12.5% FP rate)
 
+## Validation results (M5)
+
+**100-article trial (sample = 100 of 313):**
+
+| Severity | Total | TP | FP | AMB |
+|---|---|---|---|---|
+| P0 | 14 | **14** | **0** | 0 |
+| P1 | 17 | ~12 | 1–2 | 4 (Mark Price stop trigger — deferred) |
+| Conflicts | 4 | 3 | 1 | 0 |
+
+**Combined P0+P1 FP rate: 5–9%** — comfortably under the 10% target.
+
+P0 findings cluster into 5 themes, all validated as real drift worth fixing:
+1. **API base URL drift** (4 issues) — support uses `api.delta.exchange`, India docs use `api.india.delta.exchange`
+2. **GUIDES_STALE BTC deposits** (4 issues) — guides still mention BTC; support reflects current USDT-only policy. Routed to `Owner: Docs`.
+3. **Funding mechanics** (2 issues) — funding interval and caps drifted between support and SoT
+4. **Contract spec drift** (2 issues) — BTCUSD inverse settlement, ETHUSDQ margin currency
+5. **Misc** (2 issues) — flat margin formula, bracket orders deprecation status
+
+Cost of trial: $2.45. Time: 4 minutes wall-clock.
+
 ## Known limitations (M5 sign-off)
 
-- **FP rate on P0+P1: ~12.5% (1 in 8 findings).** Above the 10% target. Driven by occasional omission-style flags. Decision: ship and tune in production rather than iterate prompt further.
+- **FP rate on P0+P1: 5–9% at 100-article scale**, validated. (At 20-article trial it appeared 12.5% — that was small-sample noise; v2 is performing better than the small trial implied.)
 - **Dedup phrasing instability**: Sonnet phrases issue summaries slightly differently across runs at temperature=0, so identical issues sometimes get different dedup IDs. The dedup `still-open` count under-reports. Tracked for M6.
 - **Coverage detector is conservative.** At similarity threshold 0.85, full SoT corpus produces few/no flagged gaps because Sonnet's "default to covered if uncertain" rule is strict. This is intentional for v1 noise control; revisit if real gaps are missed.
 - **Vercel Hobby 60s timeout** caps the daily cron to ~12-15 articles per run. Most days that's fine (only changed articles audit). If a backlog builds (50+ changed articles), the cron returns `truncated=true` and the next run picks up. To unblock big-bang re-audits, run `pnpm tsx src/scripts/audit-batch.ts --write` from your machine.

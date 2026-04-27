@@ -24,8 +24,18 @@ function ownerEmoji(o?: string): string {
   return '❓';
 }
 
+// Slack hard-limits to 50 blocks per message. Keep room for header + context +
+// divider + (optional) "+N more" footer. With 1 section + 1 divider per issue,
+// 18 issues = 36 blocks + ~4 fixed = 40. Cap at 18 to be safe.
+const MAX_P0_BLOCKS_IN_MESSAGE = 18;
+
 export function buildBlockKitPayload(input: SlackPostInput): Record<string, unknown> {
   const { newP0Issues, metadata, notionPageUrl } = input;
+
+  // Sort by confidence descending and take top N for the message
+  const sorted = [...newP0Issues].sort((a, b) => b.confidence - a.confidence);
+  const shown = sorted.slice(0, MAX_P0_BLOCKS_IN_MESSAGE);
+  const truncated = newP0Issues.length - shown.length;
 
   const completedDate = metadata.completedAt.split('T')[0] ?? metadata.completedAt;
   const completedTime = (metadata.completedAt.split('T')[1] ?? '').slice(0, 5);
@@ -49,8 +59,8 @@ export function buildBlockKitPayload(input: SlackPostInput): Record<string, unkn
     { type: 'divider' },
   ];
 
-  for (let i = 0; i < newP0Issues.length; i++) {
-    const issue = newP0Issues[i]!;
+  for (let i = 0; i < shown.length; i++) {
+    const issue = shown[i]!;
     const owner = issue.suggestedOwner ?? 'Unassigned';
     const oEmoji = ownerEmoji(issue.suggestedOwner);
 
@@ -74,9 +84,24 @@ export function buildBlockKitPayload(input: SlackPostInput): Record<string, unkn
     });
 
     // Divider between issues (skip after last)
-    if (i < newP0Issues.length - 1) {
+    if (i < shown.length - 1) {
       blocks.push({ type: 'divider' });
     }
+  }
+
+  if (truncated > 0) {
+    blocks.push({ type: 'divider' });
+    blocks.push({
+      type: 'context',
+      elements: [
+        {
+          type: 'mrkdwn',
+          text: `_+${truncated} more P0 ${truncated === 1 ? 'issue' : 'issues'} not shown — ${
+            notionPageUrl ? `<${notionPageUrl}|see full list in Notion →>` : 'open Notion for full list'
+          }_`,
+        },
+      ],
+    });
   }
 
   return {
