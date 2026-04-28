@@ -30,8 +30,6 @@ function getAuth() {
 }
 
 const ISSUE_HEADERS = [
-  'Severity',
-  'Owner',
   'Issue Summary',
   'Article URL',
   'SoT URL',
@@ -41,12 +39,11 @@ const ISSUE_HEADERS = [
   'Status',
   'First Seen',
   'Last Seen',
-  'Verdict (TP/FP/AMB)',
+  'Verdict',
   'Notes',
 ];
 
 const CONFLICT_HEADERS = [
-  'Severity',
   'Summary',
   'Guides URL',
   'Guides Quote',
@@ -55,15 +52,32 @@ const CONFLICT_HEADERS = [
   'Confidence',
   'Status',
   'First Seen',
-  'Verdict (TP/FP/AMB)',
+  'Verdict',
   'Notes',
 ];
 
+const VERDICT_OPTIONS = ['True Positive', 'False Positive', 'Low Severity'];
+const ISSUE_VERDICT_COL = 9; // 0-indexed column position in ISSUE_HEADERS
+const CONFLICT_VERDICT_COL = 8; // 0-indexed column position in CONFLICT_HEADERS
+const MAX_SUMMARY_CHARS = 90;
+
+function shortSummary(s: string): string {
+  // Strip the "Support article" boilerplate prefix that the LLM frequently leads with,
+  // then truncate at a word boundary to keep the cell scannable.
+  const cleaned = s
+    .replace(/^The support article (states|claims|describes|implies|says|hardcodes|asserts|lists|omits|warns|declares|states that|notes that|indicates|hints|references|suggests|reports)\s+/i, '')
+    .replace(/^Support article (states|claims|describes|implies|says|hardcodes|asserts|lists|omits|warns|declares|states that|notes that|indicates|hints|references|suggests|reports)\s+/i, '')
+    .replace(/^The /, '')
+    .trim();
+  if (cleaned.length <= MAX_SUMMARY_CHARS) return cleaned;
+  const slice = cleaned.slice(0, MAX_SUMMARY_CHARS);
+  const lastSpace = slice.lastIndexOf(' ');
+  return (lastSpace > MAX_SUMMARY_CHARS * 0.6 ? slice.slice(0, lastSpace) : slice) + '…';
+}
+
 function issueRow(i: Issue): (string | number)[] {
   return [
-    i.severity,
-    i.suggestedOwner ?? '',
-    i.summary,
+    shortSummary(i.summary),
     i.supportUrl ?? '',
     i.sotUrl ?? '',
     i.supportQuote ?? '',
@@ -79,8 +93,7 @@ function issueRow(i: Issue): (string | number)[] {
 
 function conflictRow(c: ConflictIssue): (string | number)[] {
   return [
-    c.severity,
-    c.summary,
+    shortSummary(c.summary),
     c.guidesUrl,
     c.guidesQuote,
     c.docsUrl,
@@ -152,6 +165,12 @@ export async function publishToSheet(
   }
 
   // Write each tab
+  const issueRowCounts: Record<string, number> = {
+    P0: report.issuesBySeverity.P0.length,
+    P1: report.issuesBySeverity.P1.length,
+    P2: report.issuesBySeverity.P2.length,
+    Conflicts: report.conflicts.length,
+  };
   await writeTab(sheets, spreadsheetId, 'P0', [ISSUE_HEADERS, ...report.issuesBySeverity.P0.map(issueRow)]);
   await writeTab(sheets, spreadsheetId, 'P1', [ISSUE_HEADERS, ...report.issuesBySeverity.P1.map(issueRow)]);
   await writeTab(sheets, spreadsheetId, 'P2', [ISSUE_HEADERS, ...report.issuesBySeverity.P2.map(issueRow)]);
@@ -161,8 +180,8 @@ export async function publishToSheet(
   ]);
   await writeTab(sheets, spreadsheetId, 'Run Metadata', metadataRows(report));
 
-  // Format header rows (bold, frozen) on each tab
-  await formatHeaders(sheets, spreadsheetId, tabs);
+  // Format header rows (bold, frozen) + Verdict dropdowns + sensible column widths
+  await applyFormatting(sheets, spreadsheetId, tabs, issueRowCounts);
 
   return {
     spreadsheetId,
@@ -215,10 +234,11 @@ function metadataRows(report: AuditReport): (string | number)[][] {
   ];
 }
 
-async function formatHeaders(
+async function applyFormatting(
   sheets: sheets_v4.Sheets,
   spreadsheetId: string,
   tabs: readonly string[],
+  rowCounts: Record<string, number>,
 ): Promise<void> {
   const meta = await sheets.spreadsheets.get({ spreadsheetId });
   const sheetIdByTitle = new Map<string, number>();
@@ -228,10 +248,12 @@ async function formatHeaders(
     }
   }
   const requests: sheets_v4.Schema$Request[] = [];
+
   for (const t of tabs) {
     const id = sheetIdByTitle.get(t);
     if (id === undefined) continue;
-    // Bold row 1
+
+    // Bold + light-grey header row
     requests.push({
       repeatCell: {
         range: { sheetId: id, startRowIndex: 0, endRowIndex: 1 },
@@ -244,13 +266,84 @@ async function formatHeaders(
         fields: 'userEnteredFormat(textFormat,backgroundColor)',
       },
     });
-    // Freeze row 1
+    // Freeze header row
     requests.push({
       updateSheetProperties: {
         properties: { sheetId: id, gridProperties: { frozenRowCount: 1 } },
         fields: 'gridProperties.frozenRowCount',
       },
     });
+
+    // Verdict dropdown — only for issue + conflict tabs (not Run Metadata)
+    if (t === 'P0' || t === 'P1' || t === 'P2' || t === 'Conflicts') {
+      const isConflicts = t === 'Conflicts';
+      const colIndex = isConflicts ? CONFLICT_VERDICT_COL : ISSUE_VERDICT_COL;
+      const dataRowCount = rowCounts[t] ?? 0;
+      // Apply validation across data rows + a generous buffer for future additions
+      const endRow = Math.max(dataRowCount + 1, 200);
+      requests.push({
+        setDataValidation: {
+          range: {
+            sheetId: id,
+            startRowIndex: 1,
+            endRowIndex: endRow,
+            startColumnIndex: colIndex,
+            endColumnIndex: colIndex + 1,
+          },
+          rule: {
+            condition: {
+              type: 'ONE_OF_LIST',
+              values: VERDICT_OPTIONS.map((v) => ({ userEnteredValue: v })),
+            },
+            inputMessage: 'Pick one: True Positive, False Positive, or Low Severity',
+            strict: false,
+            showCustomUi: true,
+          },
+        },
+      });
+
+      // Set sensible column widths so Issue Summary doesn't wrap to 5 lines
+      const widths: Array<{ start: number; end: number; px: number }> = isConflicts
+        ? [
+            { start: 0, end: 1, px: 380 }, // Summary
+            { start: 1, end: 2, px: 200 }, // Guides URL
+            { start: 2, end: 3, px: 320 }, // Guides Quote
+            { start: 3, end: 4, px: 200 }, // Docs URL
+            { start: 4, end: 5, px: 320 }, // Docs Quote
+            { start: 5, end: 6, px: 80 }, // Confidence
+            { start: 6, end: 7, px: 80 }, // Status
+            { start: 7, end: 8, px: 100 }, // First Seen
+            { start: 8, end: 9, px: 140 }, // Verdict
+            { start: 9, end: 10, px: 250 }, // Notes
+          ]
+        : [
+            { start: 0, end: 1, px: 380 }, // Issue Summary
+            { start: 1, end: 2, px: 220 }, // Article URL
+            { start: 2, end: 3, px: 220 }, // SoT URL
+            { start: 3, end: 4, px: 320 }, // Support Quote
+            { start: 4, end: 5, px: 320 }, // SoT Quote
+            { start: 5, end: 6, px: 80 }, // Confidence
+            { start: 6, end: 7, px: 80 }, // Status
+            { start: 7, end: 8, px: 100 }, // First Seen
+            { start: 8, end: 9, px: 100 }, // Last Seen
+            { start: 9, end: 10, px: 140 }, // Verdict
+            { start: 10, end: 11, px: 250 }, // Notes
+          ];
+      for (const w of widths) {
+        requests.push({
+          updateDimensionProperties: {
+            range: {
+              sheetId: id,
+              dimension: 'COLUMNS',
+              startIndex: w.start,
+              endIndex: w.end,
+            },
+            properties: { pixelSize: w.px },
+            fields: 'pixelSize',
+          },
+        });
+      }
+    }
   }
   if (requests.length > 0) {
     await sheets.spreadsheets.batchUpdate({ spreadsheetId, requestBody: { requests } });
