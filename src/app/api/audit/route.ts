@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { runAudit } from '@/lib/audit/orchestrator';
 import { postP0Summary } from '@/lib/output/slack';
 import { upsertAuditPage } from '@/lib/output/notion';
+import { publishToSheet } from '@/lib/output/sheets';
+import { loadAllOpenIssues } from '@/lib/audit/dedupe';
+import type { AuditReport, Issue } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
@@ -64,7 +67,19 @@ async function handleAudit(req: Request): Promise<Response> {
       const notionTask = upsertAuditPage(report).catch((e: unknown) => {
         console.error('Notion upsert failed:', (e as Error).message);
       });
-      await Promise.all([slackTask, notionTask]);
+      const sheetsConfigured =
+        !!process.env.GOOGLE_SERVICE_ACCOUNT_JSON && !!process.env.GOOGLE_SHEET_ID;
+      // For Sheets, publish the FULL open-issues backlog from Redis (not just this
+      // run's findings). This way the spreadsheet is always the canonical triage
+      // queue; daily cron runs on quiet days don't wipe yesterday's findings.
+      const sheetsTask = sheetsConfigured
+        ? buildBacklogReport(report).then((backlog) =>
+            publishToSheet(backlog).catch((e: unknown) => {
+              console.error('Sheets publish failed:', (e as Error).message);
+            }),
+          )
+        : Promise.resolve();
+      await Promise.all([slackTask, notionTask, sheetsTask]);
     }
 
     return NextResponse.json({
@@ -95,6 +110,30 @@ async function handleAudit(req: Request): Promise<Response> {
       { status: 500 },
     );
   }
+}
+
+/**
+ * Read all currently-open issues from Redis and synthesize an AuditReport
+ * for Sheets publishing. Conflicts come from the current run only (we don't
+ * persist conflicts in Redis yet); P0/P1/P2 buckets are the full backlog.
+ */
+async function buildBacklogReport(currentRun: AuditReport): Promise<AuditReport> {
+  let allOpen: Issue[] = [];
+  try {
+    allOpen = await loadAllOpenIssues();
+  } catch (e) {
+    console.error('loadAllOpenIssues failed, falling back to current run:', (e as Error).message);
+    return currentRun;
+  }
+  return {
+    ...currentRun,
+    issuesBySeverity: {
+      P0: allOpen.filter((i) => i.severity === 'P0'),
+      P1: allOpen.filter((i) => i.severity === 'P1'),
+      P2: allOpen.filter((i) => i.severity === 'P2'),
+    },
+    // Conflicts + coverageGaps stay as the current run's view for now.
+  };
 }
 
 export async function POST(req: Request): Promise<Response> {

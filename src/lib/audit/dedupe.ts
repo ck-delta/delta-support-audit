@@ -6,6 +6,29 @@ function key(supportUrl: string): string {
   return `issues:${supportUrl}`;
 }
 
+/**
+ * Read every currently-open issue across all articles by SCAN-ing `issues:*` keys.
+ * Used by the daily cron to populate Google Sheets with the full triage backlog
+ * (not just the issues from articles audited in the current run).
+ */
+export async function loadAllOpenIssues(redis: Redis = kv()): Promise<Issue[]> {
+  const all: Issue[] = [];
+  let cursor: string | number = 0;
+  // Bound the loop defensively in case scan never returns "0".
+  for (let safety = 0; safety < 1000; safety++) {
+    const [next, keys] = await redis.scan(cursor, { match: 'issues:*', count: 100 });
+    if (keys.length > 0) {
+      const values = await redis.mget<(Issue[] | null)[]>(...keys);
+      for (const v of values) {
+        if (Array.isArray(v)) all.push(...v);
+      }
+    }
+    if (String(next) === '0') break;
+    cursor = next;
+  }
+  return all;
+}
+
 export async function loadOpenIssues(supportUrl: string, redis: Redis = kv()): Promise<Issue[]> {
   const v = await redis.get<Issue[] | null>(key(supportUrl));
   return v ?? [];
