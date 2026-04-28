@@ -45,3 +45,4 @@ coverage/
 
 # Local M0 probe artifacts (not committed; regenerate anytime)
 .m0-cache/
+.vercel
