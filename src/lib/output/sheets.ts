@@ -59,25 +59,20 @@ const CONFLICT_HEADERS = [
 const VERDICT_OPTIONS = ['True Positive', 'False Positive', 'Low Severity'];
 const ISSUE_VERDICT_COL = 9; // 0-indexed column position in ISSUE_HEADERS
 const CONFLICT_VERDICT_COL = 8; // 0-indexed column position in CONFLICT_HEADERS
-const MAX_SUMMARY_CHARS = 90;
 
-function shortSummary(s: string): string {
-  // Strip the "Support article" boilerplate prefix that the LLM frequently leads with,
-  // then truncate at a word boundary to keep the cell scannable.
-  const cleaned = s
+function cleanSummary(s: string): string {
+  // Strip the "Support article" boilerplate prefix that the LLM frequently leads with.
+  // Length is preserved — the full summary stays in the cell, with the redundant prefix removed.
+  return s
     .replace(/^The support article (states|claims|describes|implies|says|hardcodes|asserts|lists|omits|warns|declares|states that|notes that|indicates|hints|references|suggests|reports)\s+/i, '')
     .replace(/^Support article (states|claims|describes|implies|says|hardcodes|asserts|lists|omits|warns|declares|states that|notes that|indicates|hints|references|suggests|reports)\s+/i, '')
     .replace(/^The /, '')
     .trim();
-  if (cleaned.length <= MAX_SUMMARY_CHARS) return cleaned;
-  const slice = cleaned.slice(0, MAX_SUMMARY_CHARS);
-  const lastSpace = slice.lastIndexOf(' ');
-  return (lastSpace > MAX_SUMMARY_CHARS * 0.6 ? slice.slice(0, lastSpace) : slice) + '…';
 }
 
 function issueRow(i: Issue): (string | number)[] {
   return [
-    shortSummary(i.summary),
+    cleanSummary(i.summary),
     i.supportUrl ?? '',
     i.sotUrl ?? '',
     i.supportQuote ?? '',
@@ -93,7 +88,7 @@ function issueRow(i: Issue): (string | number)[] {
 
 function conflictRow(c: ConflictIssue): (string | number)[] {
   return [
-    shortSummary(c.summary),
+    cleanSummary(c.summary),
     c.guidesUrl,
     c.guidesQuote,
     c.docsUrl,
@@ -302,10 +297,11 @@ async function applyFormatting(
         },
       });
 
-      // Set sensible column widths so Issue Summary doesn't wrap to 5 lines
+      // Set sensible column widths. Summary column is generously sized + wraps
+      // (since v M6.6 we keep the LLM's full untruncated summary in the cell).
       const widths: Array<{ start: number; end: number; px: number }> = isConflicts
         ? [
-            { start: 0, end: 1, px: 380 }, // Summary
+            { start: 0, end: 1, px: 520 }, // Summary
             { start: 1, end: 2, px: 200 }, // Guides URL
             { start: 2, end: 3, px: 320 }, // Guides Quote
             { start: 3, end: 4, px: 200 }, // Docs URL
@@ -317,7 +313,7 @@ async function applyFormatting(
             { start: 9, end: 10, px: 250 }, // Notes
           ]
         : [
-            { start: 0, end: 1, px: 380 }, // Issue Summary
+            { start: 0, end: 1, px: 520 }, // Issue Summary
             { start: 1, end: 2, px: 220 }, // Article URL
             { start: 2, end: 3, px: 220 }, // SoT URL
             { start: 3, end: 4, px: 320 }, // Support Quote
@@ -343,6 +339,27 @@ async function applyFormatting(
           },
         });
       }
+
+      // Wrap text in Issue Summary column (col 0). Without this Sheets defaults
+      // to OVERFLOW which truncates visually when the next cell is non-empty.
+      requests.push({
+        repeatCell: {
+          range: {
+            sheetId: id,
+            startRowIndex: 1,
+            endRowIndex: endRow,
+            startColumnIndex: 0,
+            endColumnIndex: 1,
+          },
+          cell: {
+            userEnteredFormat: {
+              wrapStrategy: 'WRAP',
+              verticalAlignment: 'TOP',
+            },
+          },
+          fields: 'userEnteredFormat(wrapStrategy,verticalAlignment)',
+        },
+      });
     }
   }
   if (requests.length > 0) {
