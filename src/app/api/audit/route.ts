@@ -43,6 +43,21 @@ function checkAuth(req: Request): { ok: true } | { ok: false; status: number; re
 }
 
 async function handleAudit(req: Request): Promise<Response> {
+  // Global pause switch. When PAUSED=true is set in env, the audit returns
+  // immediately without running anything. Use this to mute the system without
+  // touching the cron schedule (we also remove crons from vercel.json, so this
+  // is belt-and-suspenders).
+  if (process.env.PAUSED === 'true') {
+    return NextResponse.json(
+      {
+        ok: false,
+        paused: true,
+        reason: 'Audit is paused (PAUSED=true). No Slack/Notion/Sheets writes will fire.',
+      },
+      { status: 503 },
+    );
+  }
+
   const auth = checkAuth(req);
   if (!auth.ok) return NextResponse.json({ ok: false, error: auth.reason }, { status: auth.status });
 
