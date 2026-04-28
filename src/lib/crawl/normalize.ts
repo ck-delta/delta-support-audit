@@ -41,7 +41,7 @@ const PROFILES: Record<Source, SourceProfile> = {
     rootSelector: 'body',
     stripSelectors: ['script', 'style', 'noscript', '#search', '.toc'],
   },
-  support_freshdesk: {
+  support: {
     rootSelector: 'article, .article-body, body',
     stripSelectors: [
       'nav',

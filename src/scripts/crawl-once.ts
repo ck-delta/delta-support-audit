@@ -4,7 +4,7 @@ import { sha256, hashKey, diff, loadHash, storeHash } from '@/lib/store/hash';
 import { kv } from '@/lib/store/kv';
 import { crawl as crawlGuides } from '@/lib/crawl/guides';
 import { crawl as crawlDocs } from '@/lib/crawl/docs';
-import { crawl as crawlSupport } from '@/lib/crawl/support_freshdesk';
+import { crawl as crawlSupport } from '@/lib/crawl/support';
 
 loadEnv({ path: '.env.local' });
 
@@ -42,7 +42,7 @@ function parseArgs(argv: string[]): Args {
 function printHelp(): void {
   console.log(
     [
-      'Usage: pnpm crawl [--source=all|guides|docs|support_freshdesk] [--write] [--limit=N]',
+      'Usage: pnpm crawl [--source=all|guides|docs|support] [--write] [--limit=N]',
       '',
       '  --source     Which crawler to run (default: all)',
       '  --write      Persist hashes to Upstash Redis (default: dry-run)',
@@ -54,7 +54,7 @@ function printHelp(): void {
 async function* runCrawler(source: Source): AsyncGenerator<Article> {
   if (source === 'guides') yield* crawlGuides();
   else if (source === 'docs') yield* crawlDocs();
-  else if (source === 'support_freshdesk') yield* crawlSupport();
+  else if (source === 'support') yield* crawlSupport();
 }
 
 async function main(): Promise<void> {

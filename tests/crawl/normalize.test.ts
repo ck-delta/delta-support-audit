@@ -51,10 +51,10 @@ describe('normalize — docs (Slate)', () => {
   });
 });
 
-describe('normalize — support_freshdesk (article)', () => {
+describe('normalize — support (article)', () => {
   it('extracts article body and ignores page chrome', () => {
-    const html = read('support_freshdesk-article.html');
-    const { text } = normalize(html, 'support_freshdesk');
+    const html = read('support-article.html');
+    const { text } = normalize(html, 'support');
     expect(text.length).toBeGreaterThan(50);
     expect(text).not.toMatch(/Cookie policy/i);
     expect(text).not.toMatch(/<script/i);

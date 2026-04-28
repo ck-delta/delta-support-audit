@@ -1,6 +1,6 @@
-export type Source = 'guides' | 'docs' | 'support_freshdesk';
+export type Source = 'guides' | 'docs' | 'support';
 
-export const SOURCES: readonly Source[] = ['guides', 'docs', 'support_freshdesk'] as const;
+export const SOURCES: readonly Source[] = ['guides', 'docs', 'support'] as const;
 
 export interface Article {
   source: Source;

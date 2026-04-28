@@ -1,7 +1,7 @@
 import { config as loadEnv } from 'dotenv';
 import { auditArticle } from '@/lib/audit/compare';
 import { markIssues } from '@/lib/audit/dedupe';
-import { configFromEnv as fdConfig } from '@/lib/crawl/support_freshdesk';
+import { configFromEnv as fdConfig } from '@/lib/crawl/support';
 import { fetchJson } from '@/lib/crawl/fetch';
 import { normalize } from '@/lib/crawl/normalize';
 import type { Article } from '@/lib/types';
@@ -75,9 +75,9 @@ async function fetchFreshdeskArticle(id: string): Promise<Article> {
     headers: { Authorization: auth },
   });
   const html = a.description ?? '';
-  const { text } = normalize(html, 'support_freshdesk');
+  const { text } = normalize(html, 'support');
   return {
-    source: 'support_freshdesk',
+    source: 'support',
     stableId: String(a.id),
     url: `https://${cfg.domain}/support/solutions/articles/${a.id}`,
     title: a.title,

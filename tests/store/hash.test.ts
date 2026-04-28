@@ -19,8 +19,8 @@ describe('hashKey', () => {
     expect(hashKey('guides', 'trading-guide/leverage')).toBe(
       'hash:guides:trading-guide/leverage',
     );
-    expect(hashKey('support_freshdesk', '80001014604')).toBe(
-      'hash:support_freshdesk:80001014604',
+    expect(hashKey('support', '80001014604')).toBe(
+      'hash:support:80001014604',
     );
   });
 });

@@ -56,7 +56,7 @@ export async function* findCoverageGaps(opts: CoverageOptions = {}): AsyncGenera
       if (!sotText || !sotUrl) continue;
 
       const supportMatches = await retrieveTopK(sotText.slice(0, 1500), 1, {
-        sourceFilter: 'support_freshdesk',
+        sourceFilter: 'support',
       });
       const supportOnly = supportMatches[0];
 

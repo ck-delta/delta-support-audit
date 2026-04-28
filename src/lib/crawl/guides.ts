@@ -3,8 +3,9 @@ import { fetchText, Throttle } from './fetch';
 import { normalize } from './normalize';
 import type { Article } from '@/lib/types';
 
-const SITEMAP_URL = 'https://guides.delta.exchange/delta-exchange-user-guide/sitemap.xml';
-const URL_PREFIX = 'https://guides.delta.exchange/delta-exchange-user-guide/';
+const SITEMAP_URL =
+  'https://guides.delta.exchange/delta-exchange-india-user-guide/sitemap.xml';
+const URL_PREFIX = 'https://guides.delta.exchange/delta-exchange-india-user-guide/';
 
 export function stableIdFromUrl(url: string): string {
   const trimmed = url.replace(/\/$/, '');

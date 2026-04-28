@@ -3,7 +3,7 @@ import { sha256, hashKey, diff, loadHash, storeHash } from '@/lib/store/hash';
 import { auditArticle } from './compare';
 import { markIssues } from './dedupe';
 import { findCoverageGaps } from './coverage';
-import { crawl as crawlSupport } from '@/lib/crawl/support_freshdesk';
+import { crawl as crawlSupport } from '@/lib/crawl/support';
 import { buildReport, estimateCostUsd } from '@/lib/output/report';
 import { runPool } from '@/lib/util/pool';
 import type { Article, AuditReport, ConflictIssue, CoverageIssue, Issue, RunMetadata } from '@/lib/types';

@@ -2,7 +2,7 @@ import { config as loadEnv } from 'dotenv';
 import { auditArticle } from '@/lib/audit/compare';
 import { markIssues } from '@/lib/audit/dedupe';
 import { findCoverageGaps } from '@/lib/audit/coverage';
-import { crawl as crawlSupportFreshdesk } from '@/lib/crawl/support_freshdesk';
+import { crawl as crawlSupportFreshdesk } from '@/lib/crawl/support';
 import type { Article, Issue, ConflictIssue, CoverageIssue } from '@/lib/types';
 
 loadEnv({ path: '.env.local' });

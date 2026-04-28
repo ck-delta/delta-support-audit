@@ -5,7 +5,7 @@ describe('guides stableIdFromUrl', () => {
   it('returns the path after the user-guide root', () => {
     expect(
       stableIdFromUrl(
-        'https://guides.delta.exchange/delta-exchange-user-guide/trading-guide/leverage',
+        'https://guides.delta.exchange/delta-exchange-india-user-guide/trading-guide/leverage',
       ),
     ).toBe('trading-guide/leverage');
   });
@@ -13,13 +13,13 @@ describe('guides stableIdFromUrl', () => {
   it('handles trailing slash', () => {
     expect(
       stableIdFromUrl(
-        'https://guides.delta.exchange/delta-exchange-user-guide/derivatives-guide/options-guide/',
+        'https://guides.delta.exchange/delta-exchange-india-user-guide/derivatives-guide/options-guide/',
       ),
     ).toBe('derivatives-guide/options-guide');
   });
 
   it('returns "index" for the root', () => {
-    expect(stableIdFromUrl('https://guides.delta.exchange/delta-exchange-user-guide')).toBe(
+    expect(stableIdFromUrl('https://guides.delta.exchange/delta-exchange-india-user-guide')).toBe(
       'index',
     );
   });

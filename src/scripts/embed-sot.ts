@@ -6,7 +6,7 @@ import { vec, upsertChunks, deleteChunks, retrieveTopK } from '@/lib/store/vecto
 import { chunkArticle } from '@/lib/embed/chunker';
 import { crawl as crawlGuides } from '@/lib/crawl/guides';
 import { crawl as crawlDocs } from '@/lib/crawl/docs';
-import { crawl as crawlSupportFreshdesk } from '@/lib/crawl/support_freshdesk';
+import { crawl as crawlSupportFreshdesk } from '@/lib/crawl/support';
 
 loadEnv({ path: '.env.local' });
 
@@ -53,7 +53,7 @@ function printHelp(): void {
     [
       'Usage: pnpm tsx src/scripts/embed-sot.ts [opts]',
       '',
-      '  --source=<all|guides|docs|support_freshdesk>',
+      '  --source=<all|guides|docs|support>',
       '                                 Which source to embed (default: all)',
       '  --force                        Re-embed even if hash matches',
       '  --dry-run                      Print plan, no upserts',
@@ -67,7 +67,7 @@ function printHelp(): void {
 async function* iterateSource(source: Source): AsyncGenerator<Article> {
   if (source === 'guides') yield* crawlGuides();
   else if (source === 'docs') yield* crawlDocs();
-  else if (source === 'support_freshdesk') yield* crawlSupportFreshdesk();
+  else if (source === 'support') yield* crawlSupportFreshdesk();
 }
 
 async function main(): Promise<void> {
