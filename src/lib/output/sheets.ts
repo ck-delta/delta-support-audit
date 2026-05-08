@@ -128,7 +128,10 @@ export async function publishToSheet(
   const sheets = google.sheets({ version: 'v4', auth });
   const drive = google.drive({ version: 'v3', auth });
 
-  const tabs = ['All Issues', 'P0', 'P1', 'P2', 'Conflicts', 'Run Metadata'] as const;
+  // 'New Issues' is the canonical leadership-facing tab: every finding from
+  // this run combined into one place with a Severity column. 'All Issues' is
+  // kept as a backwards-compatible alias for prior consumers.
+  const tabs = ['New Issues', 'All Issues', 'P0', 'P1', 'P2', 'Conflicts', 'Run Metadata'] as const;
   let spreadsheetId = opts.spreadsheetId ?? process.env.GOOGLE_SHEET_ID ?? '';
   let created = false;
 
@@ -173,12 +176,17 @@ export async function publishToSheet(
     ...report.issuesBySeverity.P2,
   ];
   const issueRowCounts: Record<string, number> = {
+    'New Issues': allIssues.length,
     'All Issues': allIssues.length,
     P0: report.issuesBySeverity.P0.length,
     P1: report.issuesBySeverity.P1.length,
     P2: report.issuesBySeverity.P2.length,
     Conflicts: report.conflicts.length,
   };
+  await writeTab(sheets, spreadsheetId, 'New Issues', [
+    ALL_ISSUES_HEADERS,
+    ...allIssues.map(allIssuesRow),
+  ]);
   await writeTab(sheets, spreadsheetId, 'All Issues', [
     ALL_ISSUES_HEADERS,
     ...allIssues.map(allIssuesRow),
@@ -287,9 +295,9 @@ async function applyFormatting(
     });
 
     // Verdict dropdown — only for issue + conflict tabs (not Run Metadata)
-    if (t === 'All Issues' || t === 'P0' || t === 'P1' || t === 'P2' || t === 'Conflicts') {
+    if (t === 'New Issues' || t === 'All Issues' || t === 'P0' || t === 'P1' || t === 'P2' || t === 'Conflicts') {
       const isConflicts = t === 'Conflicts';
-      const isAll = t === 'All Issues';
+      const isAll = t === 'All Issues' || t === 'New Issues';
       const colIndex = isConflicts
         ? CONFLICT_VERDICT_COL
         : isAll
@@ -377,16 +385,18 @@ async function applyFormatting(
         });
       }
 
-      // Wrap text in Issue Summary column (col 0). Without this Sheets defaults
-      // to OVERFLOW which truncates visually when the next cell is non-empty.
+      // Wrap text in Issue Summary column. Without this Sheets defaults to
+      // OVERFLOW which truncates visually when the next cell is non-empty.
+      // For New/All Issues tabs, Summary is column 1 (col 0 is Severity).
+      const summaryCol = isAll ? 1 : 0;
       requests.push({
         repeatCell: {
           range: {
             sheetId: id,
             startRowIndex: 1,
             endRowIndex: endRow,
-            startColumnIndex: 0,
-            endColumnIndex: 1,
+            startColumnIndex: summaryCol,
+            endColumnIndex: summaryCol + 1,
           },
           cell: {
             userEnteredFormat: {
