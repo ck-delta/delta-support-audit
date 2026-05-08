@@ -1,0 +1,29 @@
+{
+  "metadata": {
+    "startedAt": "2026-05-08T06:53:39.100Z",
+    "completedAt": "2026-05-08T06:55:46.759Z",
+    "model": "anthropic/claude-sonnet-4.6",
+    "articlesChecked": 224,
+    "articlesChanged": 224,
+    "articlesAudited": 0,
+    "totalIssues": 0,
+    "newIssues": 0,
+    "stillOpenIssues": 0,
+    "resolvedIssues": 0,
+    "totalConflicts": 0,
+    "totalCoverageGaps": 0,
+    "promptTokens": 0,
+    "completionTokens": 0,
+    "costEstimateUsd": 0,
+    "truncated": false,
+    "durationMs": 127659,
+    "errors": 224
+  },
+  "issuesBySeverity": {
+    "P0": [],
+    "P1": [],
+    "P2": []
+  },
+  "conflicts": [],
+  "coverageGaps": []
+}

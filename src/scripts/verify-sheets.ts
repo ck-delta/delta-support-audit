@@ -15,6 +15,13 @@ const auth = new google.auth.JWT({
 const sheets = google.sheets({ version: 'v4', auth });
 const id = process.env.GOOGLE_SHEET_ID!;
 
+// Check All Issues tab
+const allRes = await sheets.spreadsheets.values.get({ spreadsheetId: id, range: "'All Issues'!A1:L4" });
+const allRows = allRes.data.values ?? [];
+console.log("All Issues headers:", allRows[0]);
+console.log("All Issues row 1:", allRows[1]);
+console.log();
+
 // Check P0 columns + first data row
 const res = await sheets.spreadsheets.values.get({ spreadsheetId: id, range: 'P0!A1:K3' });
 const rows = res.data.values ?? [];

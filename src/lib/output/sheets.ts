@@ -43,6 +43,9 @@ const ISSUE_HEADERS = [
   'Notes',
 ];
 
+// Combined "All Issues" tab — same as ISSUE_HEADERS but with Severity prepended.
+const ALL_ISSUES_HEADERS = ['Severity', ...ISSUE_HEADERS];
+
 const CONFLICT_HEADERS = [
   'Summary',
   'Guides URL',
@@ -86,6 +89,10 @@ function issueRow(i: Issue): (string | number)[] {
   ];
 }
 
+function allIssuesRow(i: Issue): (string | number)[] {
+  return [i.severity, ...issueRow(i)];
+}
+
 function conflictRow(c: ConflictIssue): (string | number)[] {
   return [
     cleanSummary(c.summary),
@@ -121,7 +128,7 @@ export async function publishToSheet(
   const sheets = google.sheets({ version: 'v4', auth });
   const drive = google.drive({ version: 'v3', auth });
 
-  const tabs = ['P0', 'P1', 'P2', 'Conflicts', 'Run Metadata'] as const;
+  const tabs = ['All Issues', 'P0', 'P1', 'P2', 'Conflicts', 'Run Metadata'] as const;
   let spreadsheetId = opts.spreadsheetId ?? process.env.GOOGLE_SHEET_ID ?? '';
   let created = false;
 
@@ -160,12 +167,22 @@ export async function publishToSheet(
   }
 
   // Write each tab
+  const allIssues: Issue[] = [
+    ...report.issuesBySeverity.P0,
+    ...report.issuesBySeverity.P1,
+    ...report.issuesBySeverity.P2,
+  ];
   const issueRowCounts: Record<string, number> = {
+    'All Issues': allIssues.length,
     P0: report.issuesBySeverity.P0.length,
     P1: report.issuesBySeverity.P1.length,
     P2: report.issuesBySeverity.P2.length,
     Conflicts: report.conflicts.length,
   };
+  await writeTab(sheets, spreadsheetId, 'All Issues', [
+    ALL_ISSUES_HEADERS,
+    ...allIssues.map(allIssuesRow),
+  ]);
   await writeTab(sheets, spreadsheetId, 'P0', [ISSUE_HEADERS, ...report.issuesBySeverity.P0.map(issueRow)]);
   await writeTab(sheets, spreadsheetId, 'P1', [ISSUE_HEADERS, ...report.issuesBySeverity.P1.map(issueRow)]);
   await writeTab(sheets, spreadsheetId, 'P2', [ISSUE_HEADERS, ...report.issuesBySeverity.P2.map(issueRow)]);
@@ -270,9 +287,14 @@ async function applyFormatting(
     });
 
     // Verdict dropdown — only for issue + conflict tabs (not Run Metadata)
-    if (t === 'P0' || t === 'P1' || t === 'P2' || t === 'Conflicts') {
+    if (t === 'All Issues' || t === 'P0' || t === 'P1' || t === 'P2' || t === 'Conflicts') {
       const isConflicts = t === 'Conflicts';
-      const colIndex = isConflicts ? CONFLICT_VERDICT_COL : ISSUE_VERDICT_COL;
+      const isAll = t === 'All Issues';
+      const colIndex = isConflicts
+        ? CONFLICT_VERDICT_COL
+        : isAll
+          ? ISSUE_VERDICT_COL + 1 // shifted right because Severity is column 0
+          : ISSUE_VERDICT_COL;
       const dataRowCount = rowCounts[t] ?? 0;
       // Apply validation across data rows + a generous buffer for future additions
       const endRow = Math.max(dataRowCount + 1, 200);
@@ -312,19 +334,34 @@ async function applyFormatting(
             { start: 8, end: 9, px: 140 }, // Verdict
             { start: 9, end: 10, px: 250 }, // Notes
           ]
-        : [
-            { start: 0, end: 1, px: 520 }, // Issue Summary
-            { start: 1, end: 2, px: 220 }, // Article URL
-            { start: 2, end: 3, px: 220 }, // SoT URL
-            { start: 3, end: 4, px: 320 }, // Support Quote
-            { start: 4, end: 5, px: 320 }, // SoT Quote
-            { start: 5, end: 6, px: 80 }, // Confidence
-            { start: 6, end: 7, px: 80 }, // Status
-            { start: 7, end: 8, px: 100 }, // First Seen
-            { start: 8, end: 9, px: 100 }, // Last Seen
-            { start: 9, end: 10, px: 140 }, // Verdict
-            { start: 10, end: 11, px: 250 }, // Notes
-          ];
+        : isAll
+          ? [
+              { start: 0, end: 1, px: 80 }, // Severity
+              { start: 1, end: 2, px: 520 }, // Issue Summary
+              { start: 2, end: 3, px: 220 }, // Article URL
+              { start: 3, end: 4, px: 220 }, // SoT URL
+              { start: 4, end: 5, px: 320 }, // Support Quote
+              { start: 5, end: 6, px: 320 }, // SoT Quote
+              { start: 6, end: 7, px: 80 }, // Confidence
+              { start: 7, end: 8, px: 80 }, // Status
+              { start: 8, end: 9, px: 100 }, // First Seen
+              { start: 9, end: 10, px: 100 }, // Last Seen
+              { start: 10, end: 11, px: 140 }, // Verdict
+              { start: 11, end: 12, px: 250 }, // Notes
+            ]
+          : [
+              { start: 0, end: 1, px: 520 }, // Issue Summary
+              { start: 1, end: 2, px: 220 }, // Article URL
+              { start: 2, end: 3, px: 220 }, // SoT URL
+              { start: 3, end: 4, px: 320 }, // Support Quote
+              { start: 4, end: 5, px: 320 }, // SoT Quote
+              { start: 5, end: 6, px: 80 }, // Confidence
+              { start: 6, end: 7, px: 80 }, // Status
+              { start: 7, end: 8, px: 100 }, // First Seen
+              { start: 8, end: 9, px: 100 }, // Last Seen
+              { start: 9, end: 10, px: 140 }, // Verdict
+              { start: 10, end: 11, px: 250 }, // Notes
+            ];
       for (const w of widths) {
         requests.push({
           updateDimensionProperties: {
