@@ -8,6 +8,11 @@ const INDIA_PORTAL_ID = 80000083721;
 
 const SUPPORT_BASE_URL = 'https://www.delta.exchange/support/solutions/articles';
 
+// Articles to skip during the audit. Reasons are noted next to each ID.
+const IGNORED_ARTICLE_IDS = new Set<number>([
+  80001014611, // duplicate of 80001014604 ("Key information about deposits & withdrawals"); user requested skip
+]);
+
 interface FdCategory {
   id: number;
   name: string;
@@ -126,6 +131,7 @@ export async function* crawl(cfg: FreshdeskConfig = configFromEnv()): AsyncGener
         if (articles.length === 0) break;
         for (const a of articles) {
           if (a.status !== 2) continue;
+          if (IGNORED_ARTICLE_IDS.has(a.id)) continue;
 
           // Fetch CONTENT from delta.exchange (not Freshdesk).
           await deltaThrottle.wait();
