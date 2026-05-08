@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "next dev",
     "embed-prompts": "tsx src/scripts/embed-prompts.ts",
-    "prebuild": "tsx src/scripts/embed-prompts.ts",
+    "build-dashboard-data": "tsx src/scripts/build-dashboard-data.ts",
+    "prebuild": "tsx src/scripts/embed-prompts.ts && tsx src/scripts/build-dashboard-data.ts",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

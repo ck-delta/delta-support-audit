@@ -1,6 +1,4 @@
-import { readFileSync, existsSync } from 'node:fs';
-import { join } from 'node:path';
-import type { AuditReport } from '@/lib/types';
+import dashboardData from './dashboard-data.json';
 
 export const metadata = {
   title: 'Delta Support Audit',
@@ -20,62 +18,6 @@ interface Stats {
   durationSeconds: number;
   topThemes: { label: string; count: number }[];
 }
-
-function loadStats(): Stats | null {
-  const reportPath = join(process.cwd(), 'docs', 'M5-final-2026-04-27.json');
-  if (!existsSync(reportPath)) return null;
-  try {
-    const r = JSON.parse(readFileSync(reportPath, 'utf8')) as AuditReport;
-    return {
-      generatedAt: r.metadata.completedAt.split('T')[0] ?? r.metadata.completedAt,
-      articlesAudited: r.metadata.articlesAudited,
-      articlesChecked: r.metadata.articlesChecked,
-      totalP0: r.issuesBySeverity.P0.length,
-      totalP1: r.issuesBySeverity.P1.length,
-      totalP2: r.issuesBySeverity.P2.length,
-      totalConflicts: r.conflicts.length,
-      totalCoverageGaps: r.coverageGaps.length,
-      costUsd: r.metadata.costEstimateUsd,
-      durationSeconds: r.metadata.durationMs / 1000,
-      topThemes: deriveTopThemes(r),
-    };
-  } catch {
-    return null;
-  }
-}
-
-function deriveTopThemes(r: AuditReport): { label: string; count: number }[] {
-  // Crude grouping by suggestedOwner — gives a sense of where fixes land.
-  const byOwner: Record<string, number> = {};
-  for (const sev of ['P0', 'P1', 'P2'] as const) {
-    for (const i of r.issuesBySeverity[sev]) {
-      const o = i.suggestedOwner ?? 'Unassigned';
-      byOwner[o] = (byOwner[o] ?? 0) + 1;
-    }
-  }
-  return Object.entries(byOwner)
-    .map(([label, count]) => ({ label, count }))
-    .sort((a, b) => b.count - a.count);
-}
-
-const STATS_FALLBACK: Stats = {
-  generatedAt: '2026-04-27',
-  articlesAudited: 307,
-  articlesChecked: 313,
-  totalP0: 37,
-  totalP1: 48,
-  totalP2: 32,
-  totalConflicts: 13,
-  totalCoverageGaps: 0,
-  costUsd: 7.73,
-  durationSeconds: 770,
-  topThemes: [
-    { label: 'Support', count: 78 },
-    { label: 'Docs', count: 22 },
-    { label: 'Engineering', count: 12 },
-    { label: 'Product', count: 5 },
-  ],
-};
 
 const styles = {
   body: {
@@ -319,7 +261,7 @@ const styles = {
 };
 
 export default function Home() {
-  const stats = loadStats() ?? STATS_FALLBACK;
+  const stats = dashboardData as Stats;
   const totalIssues = stats.totalP0 + stats.totalP1 + stats.totalP2;
 
   return (

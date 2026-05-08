@@ -1,0 +1,23 @@
+{
+  "generatedAt": "2026-04-28",
+  "sourceFile": "M5-final-2026-04-28.json",
+  "articlesAudited": 217,
+  "articlesChecked": 221,
+  "totalP0": 35,
+  "totalP1": 33,
+  "totalP2": 28,
+  "totalConflicts": 4,
+  "totalCoverageGaps": 0,
+  "costUsd": 5.36,
+  "durationSeconds": 640,
+  "topThemes": [
+    {
+      "label": "Support",
+      "count": 89
+    },
+    {
+      "label": "Product",
+      "count": 7
+    }
+  ]
+}
